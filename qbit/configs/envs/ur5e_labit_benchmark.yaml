@@ -20,7 +20,7 @@ env_objects:
     mass: 250
 
 data_recording:
-  save_folder: "exp_labit_benchmark"
+  save_folder: "trial_0"
 
 task_objects:
   - obj_name: plate_benchmark
