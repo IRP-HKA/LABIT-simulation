@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  qbit-dev:
+  labit-dev:
     build:
       context: ..
       # ATTENTION: Switch between prebuilt and development Dockerfile

@@ -32,6 +32,7 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 &
 ##                               Libraries                                  ##
 ##############################################################################
 WORKDIR /opt/devcon_lib
+
 # ToTg
 RUN git clone https://github.com/djumpstre/py-totg.git \
     && pip3 install pybind11[global] \

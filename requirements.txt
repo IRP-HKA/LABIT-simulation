@@ -21,3 +21,4 @@ loguru
 gmsh
 scipy
 coacd
+imageio[ffmpeg]
