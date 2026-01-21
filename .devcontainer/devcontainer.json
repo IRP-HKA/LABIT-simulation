@@ -1,0 +1,35 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.177.0/containers/python-3-postgres
+// Update the VARIANT arg in docker-compose.yml to pick a Python version: 3, 3.8, 3.7, 3.6 
+{
+	"name": "qbit-devcon",
+
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "qbit-dev",
+
+	// Workspace
+	"workspaceFolder": "/workspace",  // the folder in the docker container as workspace
+	// "workspaceMount": "source=${localWorkspaceFolder}/postgres-data,target=/var/lib/postgresql/data,type=bind,consistency=cached",
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [5432, 8000],
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"zxh404.vscode-proto3"
+	],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "cd /workspace && pip install -e .",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	// "remoteUser": "vscode",
+
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+	},
+	// Forward serial device to enable flash & monitor
+}

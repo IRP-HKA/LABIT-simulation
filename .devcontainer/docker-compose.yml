@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  qbit-dev:
+    build:
+      context: ..
+      # ATTENTION: Switch between prebuilt and development Dockerfile
+      dockerfile: .devcontainer/Dockerfile
+      # dockerfile: .devcontainer/built/Dockerfile
+      args:
+        # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
+        USER_UID: 1001
+        USER_GID: 1001
+
+    volumes:
+      - ..:/workspace:cached
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev:/dev # 
+      - /usr/local:/usr/local
+      - $HOME/.Xauthority:/root/.Xauthority:rw
+
+    network_mode: 'host'
+    
+    # ATTENTION: Comment following args with nvidia, if you don't have a nvidia GPU.
+    environment:
+      DISPLAY: $DISPLAY
+      NVIDIA_VISIBLE_DEVICES: all  # HERE 
+      NVIDIA_DRIVER_CAPABILITIES: all # HERE
+    runtime: nvidia # and HERE
+
+    # Overrides default command so things don't shut down after the process ends.
+    command: sleep infinity
+    privileged: true

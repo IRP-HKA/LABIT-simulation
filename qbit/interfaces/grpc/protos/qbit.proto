@@ -1,0 +1,82 @@
+
+syntax = "proto3";
+
+// option java_multiple_files = true;
+// option java_package = "io.grpc.examples.routeguide";
+// option java_outer_classname = "RouteGuideProto";
+// option objc_class_prefix = "RTG";
+
+package qbit_grpc;
+
+
+// Interface exported by the server.
+service QbitInterface {
+    
+    // Healthy check | Handshake
+    rpc CheckServerConnection(Ping) returns (Pong) {}
+
+    // Sim as Client
+    rpc RequestNextActionForInsertion(ObsState) returns (EEFAction) {}
+    
+    // Sim as Server
+    rpc MoveArmToJointPos(ArmJointPosCmd) returns (ArmJointState) {}
+    rpc MoveArmEEFtoPose (ArmEEFPoseCmd) returns (ArmJointState) {}
+    rpc GetArmJointState(Ping) returns (ArmJointState) {}
+}
+
+///////////////  Handshake   /////////////////
+message Ping{
+    bool ping = 1;
+}
+
+message Pong {
+    bool pong = 1;
+}
+
+///////////////   Setup    /////////////////
+message ObsState{
+    bytes image_data = 1;
+    repeated double wrench = 2;
+}
+
+message EEFAction {
+    repeated double eef_action = 1;
+}
+
+message ArmJointState {
+    repeated double positions = 1;
+    repeated double velocities = 2;
+}
+
+message ArmJointPosCmd {
+    repeated double joint_pos = 1;
+}
+
+message ArmJointVelCmd {
+    repeated double joint_vel = 1;
+}
+
+message ArmEEFPoseCmd {
+    position eef_position = 1;
+    quaternion eef_quaternion = 2;
+}
+
+// Geometry
+message position {
+    double x = 1;
+    double y = 2;
+    double z = 3;
+}
+
+message rpy {
+    double r = 1;
+    double p = 2;
+    double y = 3;
+}
+
+message quaternion{
+    double x = 1;
+    double y = 2;
+    double z = 3;
+    double w = 4; 
+}

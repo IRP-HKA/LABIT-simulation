@@ -1,0 +1,21 @@
+robot_name: "ur5e"
+xml_path: "/workspace/qacbi/assets/robots/ur5e/ur5e.xml"
+
+active_components:
+  - ur5e
+
+ur5e:
+  joints:
+    - shoulder_pan_joint
+    - shoulder_lift_joint
+    - elbow_joint
+    - wrist_1_joint
+    - wrist_2_joint
+    - wrist_3_joint
+  initial_positions: [0, -1.57079632, 1.57079632, -1.57079632, -1.57079632, 0]
+  default_controller: position_controller
+  goal_tolerance: 0.002
+  # ik
+  ik_base_link: base
+  # ik_eef_link: wrist_3_link
+  ik_eef_link: wrist_3_link
