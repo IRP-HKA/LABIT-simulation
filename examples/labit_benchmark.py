@@ -128,6 +128,8 @@ class PositionBasedInsertion(MujocoEnvBase):
                   label: str = "moving",
                   ensure_negative_z_axis=True
                   ):
+        self.data_recording.set_primitive_name(name=label)
+
         # quaternion = R.from_quat(_goal_pose_T.quaternion) * R.from_quat(quat_offset)
         # quaternion = quaternion.as_quat()
         quaternion = quat_offset
@@ -170,7 +172,7 @@ class PositionBasedInsertion(MujocoEnvBase):
             for _ in range(2):
                 self.step_mj_simulation()
 
-            self.data_recording.record(label=label)
+            self.data_recording.record()
             self._mj_renderer.update_scene(self._mj_data, camera=self.cam)
 
             if i % self.iterations_per_frame == 0.0:
@@ -195,6 +197,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         with np.printoptions(precision=4, floatmode="fixed", suppress=True):
             print("> [ROBOT] reached target pose p: {}, q: {}".format(_eef_pose_T.translation, _eef_pose_T.quaternion))
 
+        self.data_recording.save()
 
     def show_mj_target_frame(self, body_name, _goal_pose_T, ensure_negative_z_axis=True):
         base_pose = get_relative_pose(self._mj_model, self._mj_data, "world", "base", ensure_negative_z_axis=False)
@@ -226,6 +229,8 @@ class PositionBasedInsertion(MujocoEnvBase):
         Set the gripper position (width between fingers).
         position: float, range from [0.0, 0.05] meter [fully closed, fully open]
         """
+        self.data_recording.set_primitive_name(name="grasping")
+
         position = np.clip(position, 0, 0.05)
         i = 0
         print("> [GRIPPER] setting gripper opening to {:.4f}.".format(position))
@@ -238,7 +243,7 @@ class PositionBasedInsertion(MujocoEnvBase):
       
             position_error = np.abs(self._mj_data.qpos[6] - (0.025 - position/2))
             
-            self.data_recording.record(label="grasping")
+            self.data_recording.record()
             self._mj_renderer.update_scene(self._mj_data, camera=self.cam)
 
             if i % self.iterations_per_frame == 0.0:
@@ -253,6 +258,7 @@ class PositionBasedInsertion(MujocoEnvBase):
             
             i += 1
         print("> [GRIPPER] done.")
+        self.data_recording.save()
 
 
     def get_offset_in_body_frame(self, body_name: str, pos_offset: np.array = np.array([0.0,0.0,0.0]), euler_offset: np.array = np.array([0.0,0.0,0.0]), ensure_negative_z_axis = True):
@@ -348,6 +354,8 @@ class PositionBasedInsertion(MujocoEnvBase):
     
 
     def insert(self, viewer, body_name: str, target_name: str, poses_dict: dict, ensure_negative_z_axis: bool = True, gripper_opening: float = 0.017, gripper_closing: float = 0.0):
+        self.data_recording.set_subtask_name(name=body_name)
+
         print("[INSERTING] {} into {}.".format(body_name, target_name))
         # set gripper opening
         self.set_gripper_position(gripper_opening, viewer)
@@ -377,9 +385,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["pre_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["pre_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
 
-        # correct orientation for insertion; arising from object in hand movement/slipping/unstable grasps -> pose uncertainty
-        # correction_quat = self.pose_correction(viewer, _goal_pose_T=goal_pose_T, body_name=body_name, target_name=target_name, ensure_negative_z_axis=ensure_negative_z_axis)
-
         # assemble body and target
         goal_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
@@ -392,9 +397,12 @@ class PositionBasedInsertion(MujocoEnvBase):
         goal_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["after_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["after_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
-    
+        
+
 
     def screw(self, viewer, body_name: str, target_name: str, poses_dict: dict, ensure_negative_z_axis: bool = True, gripper_opening: float = 0.017, gripper_closing: float = 0.0):
+        self.data_recording.set_subtask_name(name=body_name)
+
         print("[SCREWING] {} into {}.".format(body_name, target_name))
         # set gripper opening
         self.set_gripper_position(gripper_opening, viewer)
@@ -466,6 +474,8 @@ class PositionBasedInsertion(MujocoEnvBase):
         goal_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["after_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["after_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
+
+        self.data_recording.save()
 
 
     def labit_policy(self, viewer = None):
@@ -692,8 +702,8 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
         
-        self.data_recording.save()
-        self.data_recording.plot_data()
+        # self.data_recording.save()
+        # self.data_recording.plot_data()
 
         return
 
@@ -729,7 +739,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         print("\n[EXIT]saving recorded data.")
         try:
             self.data_recording.save()
-            self.data_recording.plot_data()
+            # self.data_recording.plot_data()
         except Exception as e:
             print(f"Error saving/plotting data: {e}")
 
@@ -743,8 +753,8 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         imageio.mimsave("output.mp4", self.frames, fps=self.fps)
         
-        self.data_recording.save()
-        self.data_recording.plot_data()
+        # self.data_recording.save()
+        # self.data_recording.plot_data()
         
         sys.exit(0)
 
@@ -758,5 +768,5 @@ if __name__ == "__main__":
         server_modus=True,
         sim_timestep=SIM_TIMESTEP,
         )
-    mj.exec_labit()
-    # mj.exec_labit_headless()
+    # mj.exec_labit()
+    mj.exec_labit_headless()
