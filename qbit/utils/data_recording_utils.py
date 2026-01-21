@@ -1,3 +1,4 @@
+from glob import glob
 import numpy as np
 import os
 import matplotlib.pyplot as plt
@@ -158,31 +159,39 @@ class DataRecording():
     def plot_multiple_primitives(self, filepaths, figsize=(12, 6)):
         """Plot force/torque and position data from multiple primitive .npz files."""
         fig, axs = plt.subplots(2, 3, figsize=figsize)
-        
         colors = plt.cm.tab10(np.linspace(0, 1, len(filepaths)))
+        unique_labels = []
         
         for file_idx, filepath in enumerate(filepaths):
-            data = np.load(filepath + ".npz")
+            data = np.load(filepath)
             
             time = np.asarray(data["timestamp"])
             force = np.asarray(data["eef_fts"])
             position = np.asarray(data["eef_pos"])
             
+            primitive_name = os.path.basename(filepath).replace(".npz", "").split("_")[-1]
+            if primitive_name not in unique_labels:
+                unique_labels.append(primitive_name)
+                label = primitive_name
+            else:
+                label = "_nolegend_"
+
             if force.ndim == 1:
                 force = force.reshape(-1, 1)
             if position.ndim == 1:
                 position = position.reshape(-1, 1)
             
             for idx in range(3):
-                axs[0, idx].plot(time, force[:, idx], color=colors[file_idx], 
-                                linewidth=1, label=f"Primitive {file_idx}")
+                color_idx = unique_labels.index(primitive_name)                
+                axs[0, idx].plot(time, force[:, idx], color=colors[color_idx], 
+                                linewidth=1, label=label)
                 axs[0, idx].set_title(["Fx", "Fy", "Fz"][idx])
                 axs[0, idx].set_xlabel("t [s]")
                 axs[0, idx].set_ylabel("Force [N]")
                 axs[0, idx].grid(True, alpha=0.3)
                 
-                axs[1, idx].plot(time, position[:, idx], color=colors[file_idx], 
-                                linewidth=1, label=f"Primitive {file_idx}")
+                axs[1, idx].plot(time, position[:, idx], color=colors[color_idx], 
+                                linewidth=1, label=label)
                 axs[1, idx].set_title(["x", "y", "z"][idx])
                 axs[1, idx].set_xlabel("t [s]")
                 axs[1, idx].set_ylabel("Pos [m]")
@@ -240,7 +249,7 @@ if __name__ == "__main__":
     mDataRecorder = DataRecording(task_env_config_path="qbit/configs/envs/ur5e_labit_benchmark.yaml")
     # mDataRecorder.plot_primitive(filepath="examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_39_03_positioning_pin_d5_20_2_grasping")
 
+    subtask_folder = "examples/experiment_results/trial_0/2026_01_21_16_02_49_positioning_pin_d5_20_2"
+    filepaths = sorted(glob(os.path.join(subtask_folder, "*.npz")))
 
-    mDataRecorder.plot_multiple_primitives(filepaths=[
-        "examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_03_08_positioning_pin_d5_20_2_grasping",
-        "examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_16_06_positioning_pin_d5_20_2_grasping",])
+    mDataRecorder.plot_multiple_primitives(filepaths=filepaths)
