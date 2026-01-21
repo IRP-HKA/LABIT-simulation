@@ -5,7 +5,7 @@
 	"name": "labit-benchmark-devcontainer",
 
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "qbit-dev",
+	"service": "labit-dev",
 
 	// Workspace
 	"workspaceFolder": "/workspace",  // the folder in the docker container as workspace
