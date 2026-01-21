@@ -1,43 +1,35 @@
-# QBit: Quality-awared and cloud-based benchmarking for robotic insertion tasks
+# LABIT: Long-Horizon Robotic Assembly Benchmark for Industrial Tasks
 
-This repository contains the prototype implementation of the proposed quality-based benchmarking approach for robotic insertion tasks. For many real-world use cases, using only the success rate is not sufficient. For example, in the insertion process, too high force can lead to part damage. Therefore, we introduce new quality-aware metrics for benchmarking and propose to use the randomized simulation for evaluation in the first step, since failure with real robot experiment is sometimes too extensive.
+The LABIT benchmark provides a comprehensive evaluation framework for robotic assembly and insertion operations. This simulation framework implements the full LABIT benchmark within MuJoCo, enabling scalable evaluation of robotic insertion task performance.
 
-First, a brief overview of the benchmarking framework:
+### Benchmark Overview
 
-We use the MuJoCo with the new Python binding as the physical engine, which provides comprehensive modeling capabilities to simulate the contact between rigid bodies.
+LABIT is designed to evaluate robotic systems on realistic assembly tasks with varying complexity levels. The benchmark includes:
 
-To enable the insertion process, the convex decomposition is needed. Two decomposition approaches: VHACD and CoACD, are integrated. We need to downscale the peg mesh to increase the space between two parts. From our experiment, we found that even 0.1% difference in mesh scale can cause force changes from near zero (less than 0.1 N) to very high (>30 N). 
+- **Base Parts**: A standardized set of mechanical components representing real assembly scenarios
+- **Task Variants**: Multiple insertion tasks with different difficulty levels and geometric constraints
+- **Performance Metrics**: Quality-aware metrics that go beyond simple success/failure evaluation
 
-Instead of using a mesh, we decompose the hole object into many small spheres. With this method, we don't need to downscale the mesh, and we can also simulate the surface roughness by randomizing the location of the spheres on the surfaces.
+### Quality-Aware Performance Metrics
 
-See the paper for more details.
+The framework implements a comprehensive taxonomy of assembly complexity and corresponding evaluation protocols:
 
-To run the experiment at scale, we propose a cloud-based approach to parallize the execution of both inference (in the case with insertion net) and simulation instances on the Kubernetes-based infrastructure.
+- **Taxonomy of Assembly Complexity**: Tasks are categorized by geometric difficulty, requiring different levels of precision and force control
+- **Evaluation Protocol**: Standardized procedures for consistent and reproducible benchmarking across different robotic systems
+- **Quality Metrics**: Measures including insertion force profiles, contact forces, and geometric alignment to assess task execution quality
 
-The current code base is under active refactoring to improve code readability and extensibility. Further documentation, setup guide and more examples will be provided.
+### Simulation Environment
 
+The LABIT benchmark simulation is built on:
 
+- **Physics Engine**: MuJoCo for accurate contact dynamics and force simulation
+- **Scene Configuration**: Pre-configured scenes with benchmark-standard object meshes and collision geometry
+- **Randomization**: Support for randomized sphere-based surface representations to simulate surface variations and roughness
 
-## Development Environment
+### Running Benchmark Evaluations
 
-### For VSCode users (recommended):
-You may need to adapt the [docker-compose.yaml](.devcontainer/docker-compose.yml) depending on you system setup.
+Configuration files for the LABIT benchmark are provided in:
+- `configs/envs/ur5e_labit_benchmark.yaml` - Environment configuration
+- `configs/robots/ur5e.yaml` - Robot configuration
 
- - devcontainer image: By default, we recommend using the pre-built devcontainer image. If you want to install additional packages, please modify the [Dockerfile](.devcontainer/Dockerfile) and change the dockerfile arg in [docker-compose.yaml](.devcontainer/docker-compose.yml).
-
- - nvidia gpu support: If you want to use the gpu acceleration, please comment out the args with `nvidia` in [docker-compose.yaml](.devcontainer/docker-compose.yml)
-
-### Enable the GUI with xserver 
-```bash
-xhost + local:root
-```
-
-
-## Using classical Mujoco vs. MJX
-
-Reference: [MJX - The Sharp Bits](https://mujoco.readthedocs.io/en/stable/mjx.html#mjx-the-sharp-bits)
-
-When MuJoCo is used for simulation as explained in the simulation loop section, it runs in a single thread. We have experimented with multi-threading parts of the simulation pipeline that are computationally expensive and amenable to parallel processing, and have concluded that the speedup is not worth using up the extra processor cores. This is because MuJoCo is already fast compared to the overhead of launching and synchronizing multiple threads within the same time step. If users start working with large simulations involving many floating bodies, we may eventually implement within-step multi-threading, but for now this use case is not common.
-
-
-
+Pre-processed benchmark objects are available in `assets/task_env/labit_benchmark/` including part meshes, collision models, and sphere-based decompositions.
