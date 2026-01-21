@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.signal import butter, lfilter, freqz
+from scipy.signal import butter, lfilter
 
 
 def metric_signal_energy(F):
