@@ -20,7 +20,7 @@ import imageio
 
 from qbit.utils.tf_utils import T
 from qbit.utils.mj_viewer_utils import update_view_camera_parameter
-from qbit.utils.mujoco_utils import get_relative_pose, get_body_pose_in_world, convert_quat_to_wxyz
+from qbit.utils.mujoco_utils import get_relative_pose, convert_quat_to_wxyz
 from qbit.utils.data_recording_utils import DataRecording
 from qbit.sim_envs.mujoco_env_insertion import MujocoEnvBase
 from scipy.spatial.transform import Rotation as R
@@ -718,8 +718,6 @@ class PositionBasedInsertion(MujocoEnvBase):
             imageio.mimsave("output.mp4", self.frames, fps=self.fps)
             viewer.close()
 
-        sys.exit(0) 
-
 
     def signal_handler(self, sig, frame):
         print("\n[EXIT]benchmark execution got interrupted. Saving video until current timestamp.")
@@ -762,5 +760,3 @@ if __name__ == "__main__":
         )
     mj.exec_labit()
     # mj.exec_labit_headless()
-
-    sys.exit(0)

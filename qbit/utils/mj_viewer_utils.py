@@ -1,6 +1,5 @@
 
 import numpy as np
-import mujoco
 
 def update_view_camera_parameter(viewer, view_type = "default"):
     """
