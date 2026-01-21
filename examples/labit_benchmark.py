@@ -11,25 +11,19 @@ import sys
 import signal
 os.environ["MUJOCO_GL"] = "egl"
 
-from copy import deepcopy
-
 import numpy as np
 import mujoco
 import mujoco.viewer
 
-import matplotlib.pyplot as plt
 import time
 import imageio
 
-from qbit.controllers.eef_position_controller import EEFPositionController
 from qbit.utils.tf_utils import T
-from qbit.utils.tf_transformation import quaternion_multiply
 from qbit.utils.mj_viewer_utils import update_view_camera_parameter
-from qbit.utils.mujoco_utils import get_relative_pose, get_body_pose_in_world, print_object_names, convert_quat_to_xyzw, convert_quat_to_xyzw, convert_quat_to_wxyz
+from qbit.utils.mujoco_utils import get_relative_pose, get_body_pose_in_world, convert_quat_to_wxyz
 from qbit.utils.data_recording_utils import DataRecording
-from qbit.sim_envs.mujoco_env_insertion import MjEnvInsertion, MujocoEnvBase
+from qbit.sim_envs.mujoco_env_insertion import MujocoEnvBase
 from scipy.spatial.transform import Rotation as R
-from scipy.spatial import geometric_slerp
 from scipy.spatial.transform import Slerp
 
 NUM_RUNS = 300
@@ -85,6 +79,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         self.fps = 24
         self.iterations_per_frame = int(1/self._sim_timestep/self.fps)
 
+
     def termination(self, 
                     pose_goal,
                     pose_current,
@@ -122,137 +117,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         slerp = Slerp(times=[0.0, 1.0], rotations=R.concatenate([R.from_quat(q0), R.from_quat(q1)]))
         q_t = slerp(s)
         return p_t, q_t.as_quat()
-
-
-    def mocap_move_pose(self, viewer, label: str, _goal_pose_T: T = None, pos_offset: np.array = np.array([0.0, 0.0, 0.0])):
-        _goal_pose_T.translation += pos_offset
-
-        integration_dt: float = 0.9
-
-        # Damping term for the pseudoinverse. This is used to prevent joint velocities from
-        # becoming too large when the Jacobian is close to singular.
-        damping: float = 1e-4
-
-        # Simulation timestep in seconds.
-        dt: float = self._sim_timestep
-
-        # Maximum allowable joint velocity in rad/s. Set to 0 to disable.
-        max_angvel = 2*np.pi
-
-        site_id = self._mj_model.site("attachment_site").id
-
-        # Get the dof and actuator ids for the joints we wish to control.
-        joint_names = [
-            "shoulder_pan_joint",
-            "shoulder_lift_joint",
-            "elbow_joint",
-            "wrist_1_joint",
-            "wrist_2_joint",
-            "wrist_3_joint",
-        ]
-        actuator_names = [
-            "shoulder_pan",
-            "shoulder_lift",
-            "elbow",
-            "wrist_1",
-            "wrist_2",
-            "wrist_3",
-        ]
-        dof_ids = np.array([self._mj_model.joint(name).id for name in joint_names])
-        # Note that actuator names are the same as joint names in this case.
-        actuator_ids = np.array([self._mj_model.actuator(name).id for name in actuator_names])
-
-        # Initial joint configuration saved as a keyframe in the XML file.
-        # key_id = self._mj_model.key("home").id
-
-        # Mocap body we will control with our mouse.
-        mocap_id = self._mj_model.body("target").mocapid[0]
-
-        # Pre-allocate numpy arrays.
-        jac = np.zeros((6, self._mj_model.nv))
-        diag = damping * np.eye(6)
-        error = np.zeros(6)
-        error_pos = error[:3]
-        error_ori = error[3:]
-        site_quat = np.zeros(4)
-        q0 = np.zeros(4)
-        site_quat_conj = np.zeros(4)
-        error_quat = np.zeros(4)        
-        
-        start_time_mj = self._mj_data.time
-        p0 = self._mj_data.site(site_id).xpos
-        mujoco.mju_mat2Quat(q0, self._mj_data.site(site_id).xmat)
-        while True:
-            step_start = time.time()
-            # Set the target position of the end-effector site.
-            
-            p_t, q_t = self.minimal_jerk_pose(
-                p0=p0,
-                q0=q0,
-                p1=_goal_pose_T.translation,
-                q1=_goal_pose_T.quaternion,
-                t=self._mj_data.time,
-                T=start_time_mj+1.0
-            )
-
-            self._mj_data.mocap_pos[mocap_id, :] = p_t
-            self._mj_data.mocap_quat[mocap_id, :] = q_t
-
-            # self._mj_data.mocap_pos[mocap_id, :] = _goal_pose_T.translation
-            # self._mj_data.mocap_quat[mocap_id, :] = _goal_pose_T.quaternion
-
-            # Position error.
-            error_pos[:] = self._mj_data.mocap_pos[mocap_id] - self._mj_data.site(site_id).xpos
-
-            # Orientation error.
-            mujoco.mju_mat2Quat(site_quat, self._mj_data.site(site_id).xmat)
-            mujoco.mju_negQuat(site_quat_conj, site_quat)
-            mujoco.mju_mulQuat(error_quat, self._mj_data.mocap_quat[mocap_id], site_quat_conj)
-            mujoco.mju_quat2Vel(error_ori, error_quat, 1.0)
-
-            # Get the Jacobian with respect to the end-effector site.
-            mujoco.mj_jacSite(self._mj_model, self._mj_data, jac[:3], jac[3:], site_id)
-
-            # Solve system of equations: J @ dq = error.
-            dq = jac.T @ np.linalg.solve(jac @ jac.T + diag, error)
-
-            # Scale down joint velocities if they exceed maximum.
-            if max_angvel > 0:
-                dq_abs_max = np.abs(dq).max()
-                if dq_abs_max > max_angvel:
-                    dq *= max_angvel / dq_abs_max
-
-            # Integrate joint velocities to obtain joint positions.
-            q = self._mj_data.qpos.copy()
-            mujoco.mj_integratePos(self._mj_model, q, dq, integration_dt)
-            
-            min, max = self._mj_model.jnt_range.T
-            jointrangelen = len(q)
-            min = np.append(np.array(min), np.zeros(jointrangelen - len(min)))
-            max = np.append(np.array(max), np.zeros(jointrangelen - len(max)))
-            
-            # Set the control signal.
-            np.clip(q, min, max, out=q)
-            self._mj_data.ctrl[actuator_ids] = q[dof_ids]
-
-            # Step the simulation.
-            mujoco.mj_step(self._mj_model, self._mj_data)
-            self.data_recording.record(label=label)
-
-            if viewer is not None:
-                viewer.sync()
-            
-            with np.printoptions(precision=4, floatmode="fixed", suppress=True):
-                print("[ROBOT] error position: {:.4f}, error orientation: {:.4f}, joint velocities: {}".format(
-                    np.linalg.norm(error_pos), np.linalg.norm(error_ori), self._mj_data.qvel[0:6]))
-
-            if (np.linalg.norm(error_pos) < 0.0003 and np.linalg.norm(error_ori) < 0.001) or (all(np.abs(self._mj_data.qvel[0:6]) < 0.001)):
-                print("[ROBOT] reached goal pose")
-                break
-            
-            time_until_next_step = dt - (time.time() - step_start)
-            if time_until_next_step > 0:
-                time.sleep(time_until_next_step)
 
 
     def move_pose_lin(self,
@@ -356,81 +220,6 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         self._mj_data.mocap_quat[mocap_id, :] = convert_quat_to_wxyz(quat)  # wxyz
     
-
-    def move_pose_lin_new(self,
-                  viewer,
-                  _goal_pose_T: T = None,
-                  pos_offset: np.array = np.array([0.0, 0.0, 0.0]),
-                  label: str = "moving"
-                  ):
-        
-        _goal_pose_T.translation += pos_offset
-        
-        current_eef_pose_T = self.robot.get_eef_pose_in_base_frame()
-
-        q_init = self.robot.get_current_joint_state()[0]
-        q_goal = self.robot._eef_position_controller.ik.ik(_goal_pose_T._matrix, q_init)
-
-        i = 0
-        print("[ROBOT] move to orientation")
-        q_current = self.robot.get_current_joint_state()[0]
-        qt_goal = self.robot._eef_position_controller.ik.ik(T(current_eef_pose_T.translation, _goal_pose_T.quaternion)._matrix, q_current)
-        while True:
-            
-            self._mj_data.ctrl[0:6] = qt_goal
-
-            self.step_mj_simulation()
-            self.data_recording.record(label=label)
-
-            if viewer != None:    
-                viewer.sync()
-
-            pose_current = self.robot.get_eef_pose_in_base_frame()
-
-            # Orientation error.
-            site_quat_conj = np.zeros(4)
-            error_quat = np.zeros(4)
-            error_ori = np.zeros(3)
-            site_quat = pose_current.quaternion
-            mujoco.mju_negQuat(site_quat_conj, site_quat)
-            mujoco.mju_mulQuat(error_quat, _goal_pose_T.quaternion, site_quat_conj)
-            mujoco.mju_quat2Vel(error_ori, error_quat, 1.0)
-
-            if (np.linalg.norm(error_ori) < 0.005) or (all(np.abs(self._mj_data.qvel[0:6]) < 0.00001)):
-                print("[ROBOT] reached goal orientation")
-                break
-
-            i += 1
-
-        i = 0
-        current_eef_pose_T = self.robot.get_eef_pose_in_base_frame()
-        print("[ROBOT] move to position")
-        q_current = self.robot.get_current_joint_state()[0]
-        qt_goal = self.robot._eef_position_controller.ik.ik(T(_goal_pose_T.translation, current_eef_pose_T.quaternion)._matrix, q_current)
-        while True:
-            
-            self._mj_data.ctrl[0:6] = qt_goal
-
-            self.step_mj_simulation()
-            self.data_recording.record(label=label)
-
-            if viewer != None:    
-                viewer.sync()
-
-            pose_current = self.robot.get_eef_pose_in_base_frame()
-
-            # # Position error.
-            error_pos = _goal_pose_T.translation - pose_current.translation
-
-            if (np.linalg.norm(error_pos) < 0.001) or (all(np.abs(self._mj_data.qvel[0:6]) < 0.00001)):
-                print("[ROBOT] reached goal position")
-                break
-
-            i += 1
-
-        pos_a, quat_a =  get_body_pose_in_world(self._mj_model, self._mj_data, "tool0")
-        print("tool0 in world frame: pos {}, quat {}".format(pos_a, quat_a))
-
 
     def set_gripper_position(self, position: float, viewer):
         """
@@ -677,30 +466,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         goal_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["after_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["after_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
-
-
-    def pose_correction(self, viewer, body_name, target_name, _goal_pose_T, ensure_negative_z_axis):
-        body_pose = get_relative_pose(self._mj_model, self._mj_data, "base", body_name, ensure_negative_z_axis=ensure_negative_z_axis)
-        target_pose = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
-        current_pose = self.robot.get_eef_pose_in_base_frame()
-
-        # Calculate orientation correction needed
-        body_rot = R.from_quat(body_pose.quaternion).as_matrix()
-        target_rot = R.from_quat(target_pose.quaternion).as_matrix()
-        
-        relative_object_pose = target_rot.T @ body_rot
-        correction_rot = R.from_quat(_goal_pose_T.quaternion).as_matrix() @ relative_object_pose.T
-        
-
-        # correction_rot = target_rot @ body_rot.T
-        correction_quat = R.from_matrix(correction_rot).as_quat()
-
-        # quaternion = R.from_quat(_goal_pose_T.quaternion) * R.from_quat(correction_quat)
-        # quaternion = quaternion.as_quat()
-
-        self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=current_pose, quat_offset=correction_quat, label="orienting", ensure_negative_z_axis=ensure_negative_z_axis)
-        return correction_quat
-    
 
 
     def labit_policy(self, viewer = None):
@@ -953,18 +718,24 @@ class PositionBasedInsertion(MujocoEnvBase):
             imageio.mimsave("output.mp4", self.frames, fps=self.fps)
             viewer.close()
 
-            return 
+        sys.exit(0) 
 
 
     def signal_handler(self, sig, frame):
-        print("benchmark execution got interrupted. Saving video until current timestamp.")
-        imageio.mimsave("output.mp4", self.frames, fps=self.fps)
+        print("\n[EXIT]benchmark execution got interrupted. Saving video until current timestamp.")
+        try:
+            imageio.mimsave("output.mp4", self.frames, fps=self.fps)
+        except Exception as e:
+            print(f"Error saving video: {e}")
         
-        print("saving data recording.")
-        self.data_recording.save()
-        self.data_recording.plot_data()
+        print("\n[EXIT]saving recorded data.")
+        try:
+            self.data_recording.save()
+            self.data_recording.plot_data()
+        except Exception as e:
+            print(f"Error saving/plotting data: {e}")
 
-        sys.exit(0) 
+        os._exit(0) 
 
 
     def exec_labit_headless(self):
@@ -991,3 +762,5 @@ if __name__ == "__main__":
         )
     mj.exec_labit()
     # mj.exec_labit_headless()
+
+    sys.exit(0)
