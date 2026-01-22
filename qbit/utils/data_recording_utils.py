@@ -72,12 +72,12 @@ class DataRecording():
         self.i += 1
 
     def save(self):
-        subtask_dir = os.path.join(self.RESULT_DIR, f"{self.subtask_timestamp}_{self.subtask_name}")
-        if not os.path.exists(subtask_dir):
-            os.makedirs(subtask_dir)
+        self.subtask_dir = os.path.join(self.RESULT_DIR, f"{self.subtask_timestamp}_{self.subtask_name}")
+        if not os.path.exists(self.subtask_dir):
+            os.makedirs(self.subtask_dir)
         
         # Save file as: timestamp_subtaskname_primitivename
-        self.savepath = os.path.join(subtask_dir, f"{self.primitive_timestamp}_{self.subtask_name}_{self.primitive_name}")
+        self.savepath = os.path.join(self.subtask_dir, f"{self.primitive_timestamp}_{self.subtask_name}_{self.primitive_name}")
 
         self.timestamp = np.array(self.timestamp)
         self.eef_fts = np.array(self.eef_fts)
@@ -199,7 +199,7 @@ class DataRecording():
         
         axs[0, 0].legend()
         plt.tight_layout()
-        plt.savefig("multiple_primitives_plot.png")
+        plt.savefig(os.path.join(*filepath.split(os.sep)[:-1], "multiple_primitives_plot.png"))
         plt.close()
         return fig, axs
 
@@ -249,7 +249,7 @@ if __name__ == "__main__":
     mDataRecorder = DataRecording(task_env_config_path="qbit/configs/envs/ur5e_labit_benchmark.yaml")
     # mDataRecorder.plot_primitive(filepath="examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_39_03_positioning_pin_d5_20_2_grasping")
 
-    subtask_folder = "examples/experiment_results/trial_0/2026_01_21_16_02_49_positioning_pin_d5_20_2"
+    subtask_folder = "examples/experiment_results/trial_0/2026_01_21_22_49_50_screw_m5_16_hexagon_head_2"
     filepaths = sorted(glob(os.path.join(subtask_folder, "*.npz")))
 
     mDataRecorder.plot_multiple_primitives(filepaths=filepaths)

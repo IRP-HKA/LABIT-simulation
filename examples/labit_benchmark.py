@@ -475,7 +475,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["after_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["after_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
 
-        self.data_recording.save()
 
 
     def labit_policy(self, viewer = None):
@@ -491,34 +490,34 @@ class PositionBasedInsertion(MujocoEnvBase):
         # #
        
         # assembly of housing middle components
-        # self.insert(viewer=viewer, body_name="pcb_body", target_name="housing_middle_pcb_target_body", gripper_closing=0.006,
-        #     poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
-        #                 "grasp": {"position": np.array([0.0, 0.0, -0.005])},
-        #                 "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
-        #                 "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
-        #                 "asm": {"position": np.array([0.0, 0.0, -0.015])},
-        #                 "after_asm": {"position": np.array([0.0, 0.05, -0.11])}})
-        # self.insert(viewer=viewer, body_name="plug_inside_loose_1_body", target_name="plug_inside_fixed_1_body", gripper_closing=0.005,
-        #     poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
-        #                 "grasp": {"position": np.array([0.0, 0.0, -0.005])},
-        #                 "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
-        #                 "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
-        #                 "asm": {"position": np.array([0.0, 0.0, -0.009])},
-        #                 "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
-        # self.insert(viewer=viewer, body_name="plug_inside_loose_2_body", target_name="plug_inside_fixed_2_body", gripper_closing=0.005,
-        #     poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
-        #                 "grasp": {"position": np.array([0.0, 0.0, -0.005])},
-        #                 "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
-        #                 "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
-        #                 "asm": {"position": np.array([0.0, 0.0, -0.009])},
-        #                 "after_asm": {"position": np.array([0.1, 0.0, -0.1])}})
-        # self.insert(viewer=viewer, body_name="plug_outside_loose_body", target_name="plug_outside_fixed_body", gripper_closing=0.009,
-        #     poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
-        #                 "grasp": {"position": np.array([0.0, 0.0, -0.001])},
-        #                 "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
-        #                 "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
-        #                 "asm": {"position": np.array([0.0, 0.0, -0.001])},
-        #                 "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
+        self.insert(viewer=viewer, body_name="pcb_body", target_name="housing_middle_pcb_target_body", gripper_closing=0.006,
+            poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
+                        "grasp": {"position": np.array([0.0, 0.0, -0.005])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
+                        "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
+                        "asm": {"position": np.array([0.0, 0.0, -0.015])},
+                        "after_asm": {"position": np.array([0.0, 0.05, -0.11])}})
+        self.insert(viewer=viewer, body_name="plug_inside_loose_1_body", target_name="plug_inside_fixed_1_body", gripper_closing=0.005,
+            poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
+                        "grasp": {"position": np.array([0.0, 0.0, -0.005])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
+                        "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
+                        "asm": {"position": np.array([0.0, 0.0, -0.009])},
+                        "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
+        self.insert(viewer=viewer, body_name="plug_inside_loose_2_body", target_name="plug_inside_fixed_2_body", gripper_closing=0.005,
+            poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
+                        "grasp": {"position": np.array([0.0, 0.0, -0.005])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
+                        "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
+                        "asm": {"position": np.array([0.0, 0.0, -0.009])},
+                        "after_asm": {"position": np.array([0.1, 0.0, -0.1])}})
+        self.insert(viewer=viewer, body_name="plug_outside_loose_body", target_name="plug_outside_fixed_body", gripper_closing=0.009,
+            poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
+                        "grasp": {"position": np.array([0.0, 0.0, -0.001])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
+                        "pre_asm": {"position": np.array([0.0, 0.0, -0.1])},
+                        "asm": {"position": np.array([0.0, 0.0, -0.001])},
+                        "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
 
         # # assembly for housing bottom components
         self.insert(viewer=viewer, body_name="positioning_pin_d5_20_2_body",target_name="housing_bottom_pin_hole_2_body", gripper_closing=0.0035,
@@ -627,7 +626,7 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "after_asm": {"position": np.array([-0.0286, 0.1, -0.2])}})
 
         # pin for coverplate 1
-        self.insert(viewer=viewer, body_name="positioning_pin_d5_20_5_body", target_name="housing_top_pin_hole_coverplate_1_body", gripper_closing=0.01,
+        self.insert(viewer=viewer, body_name="positioning_pin_d5_20_5_body", target_name="housing_top_pin_hole_coverplate_1_body", gripper_closing=0.0035,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.02])},
                         "grasp": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
@@ -635,13 +634,13 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_asm": {"position": np.array([0.0, 0.1, -0.2])}})
         # pin for coverplate 2
-        self.insert(viewer=viewer, body_name="positioning_pin_d5_20_6_body", target_name="housing_top_pin_hole_coverplate_2_body", gripper_closing=0.01,
+        self.insert(viewer=viewer, body_name="positioning_pin_d5_20_6_body", target_name="housing_top_pin_hole_coverplate_2_body", gripper_closing=0.0035,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.02])},
                         "grasp": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_asm": {"position": np.array([0.0, 0.0, -0.15])}})
+                        "after_asm": {"position": np.array([0.0, 0.1, -0.2])}})
         # coverplate
         self.insert(viewer=viewer, body_name="cover_plate_body", target_name="housing_top_body", gripper_closing=0.01,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.04, -0.03])},
@@ -736,12 +735,11 @@ class PositionBasedInsertion(MujocoEnvBase):
         except Exception as e:
             print(f"Error saving video: {e}")
         
-        print("\n[EXIT]saving recorded data.")
-        try:
-            self.data_recording.save()
-            # self.data_recording.plot_data()
-        except Exception as e:
-            print(f"Error saving/plotting data: {e}")
+        # print("\n[EXIT]saving recorded data.")
+        # try:
+        #     self.data_recording.save()
+        # except Exception as e:
+        #     print(f"Error saving/plotting data: {e}")
 
         os._exit(0) 
 
