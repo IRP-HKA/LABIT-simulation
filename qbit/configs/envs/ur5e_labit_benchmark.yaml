@@ -20,7 +20,7 @@ env_objects:
     mass: 250
 
 data_recording:
-  save_folder: "trial_0"
+  save_folder: "trial_1"
 
 task_objects:
   - obj_name: plate_benchmark
@@ -264,6 +264,7 @@ task_objects:
                   [[0.035, -0.005, -0.0045], [0.045, 0.005, 0.0155]],
                   [[-0.005, 0.065, -0.0185], [0.005, 0.075, 0.0015]],
                   [[0.065, -0.075, -0.0185], [0.075, -0.065, 0.0015]],
+                  [[-0.03175, -0.03175, -0.001], [0.03175, 0.03175, 0.007]] # o_ring placement
                   ]
     mesh_path: /workspace/qbit/assets/task_env/labit_benchmark/housing_top.stl
     attach_body: 'plate_benchmark_body'

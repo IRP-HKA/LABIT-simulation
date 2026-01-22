@@ -507,7 +507,7 @@ if __name__ == "__main__":
     # mesh_gmsh_path = mesh_stl_path[:-3] + "msh"
 
     # Load the sphered object file
-    sphered_file = "qbit/assets/task_env/labit_benchmark/tube_clamp_sphered.npy"
+    sphered_file = "qbit/assets/task_env/labit_benchmark/housing_top_sphered.npy"
     decomposed_mesh = np.load(sphered_file, allow_pickle=True)
     positions = decomposed_mesh.item()["positions"]
     radii = decomposed_mesh.item()["radii"]
@@ -517,35 +517,30 @@ if __name__ == "__main__":
 
     # Create a simple visualization using trimesh
     spheres = []
+    i = 0
     for pos, rad in zip(positions, radii):
-        sphere = trimesh.creation.icosphere(subdivisions=3, radius=rad)
-        sphere.apply_translation(pos)
-        spheres.append(sphere)
+        if i % 2 == 0:
+            sphere = trimesh.creation.icosphere(subdivisions=1, radius=rad)
+            sphere.apply_translation(pos)
+            spheres.append(sphere)
+        i += 1
 
-    bboxes = [[[0.0475, 0.00475, 0.015], [0.0625, 0.0195, 0.03]], #tube
-                  [[0.08, 0.003, 0.015], [0.09, 0.013, 0.03]],        # pin
-                  [[0.105, 0.003, 0.015], [0.115, 0.013, 0.03]],      # pin
-                  [[0.13, 0.003, 0.015], [0.14, 0.013, 0.03]],        # screw
-                  [[0.155, 0.003, 0.015], [0.165, 0.013, 0.03]],      # screw
-                  [[0.18, 0.003, 0.015], [0.19, 0.013, 0.03]],        # screw
-                  [[0.007, 0.05, 0.015],[0.017, 0.06, 0.03]],         # pin
-                  [[0.007, 0.02, 0.015],[0.017, 0.03, 0.03]],         # pin
-                  [[0.08, 0.038, 0.015], [0.09, 0.048, 0.03]],        # pin
-                  [[0.105, 0.038, 0.015], [0.115, 0.048, 0.03]],      # pin
-                  [[0.13, 0.038, 0.015], [0.14, 0.048, 0.03]],        # screw
-                  [[0.155, 0.038, 0.015], [0.165, 0.048, 0.03]],      # screw
-                  [[0.04325, 0.06291, 0.0125], [0.05325, 0.07291, 0.0275]], # plug inside
-                  [[0.085, 0.06, 0.015], [0.095, 0.07, 0.03]], # plug outside
-                  [[0.12985, 0.06291, 0.0125], [0.13985, 0.07291, 0.0275]], # plug inside
+    bboxes = [[[-0.075, -0.005, -0.004], [-0.065, 0.005, 0.016]],
+                  [[0.135, -0.005, -0.004], [0.145, 0.005, 0.016]],
+                  [[-0.045, -0.005, -0.0045], [-0.035, 0.005, 0.0155]],
+                  [[0.035, -0.005, -0.0045], [0.045, 0.005, 0.0155]],
+                  [[-0.005, 0.065, -0.0185], [0.005, 0.075, 0.0015]],
+                  [[0.065, -0.075, -0.0185], [0.075, -0.065, 0.0015]],
+                  [[-0.03175, -0.03175, -0.001], [0.03175, 0.03175, 0.007]] # o_ring placement
                   ]
     
-    # for bbox in bboxes:
-    #     bbox_min = bbox[0]
-    #     bbox_max = bbox[1]
-    #     box = trimesh.creation.box(extents=np.array(bbox_max)-np.array(bbox_min))
-    #     box.apply_translation((np.array(bbox_min)+np.array(bbox_max))/2)
-    #     box.visual.face_colors = [255, 0, 0, 100]  # Red color with some transparency
-    #     spheres.append(box)
+    for bbox in bboxes:
+        bbox_min = bbox[0]
+        bbox_max = bbox[1]
+        box = trimesh.creation.box(extents=np.array(bbox_max)-np.array(bbox_min))
+        box.apply_translation((np.array(bbox_min)+np.array(bbox_max))/2)
+        box.visual.face_colors = [255, 0, 0, 100]  # Red color with some transparency
+        spheres.append(box)
     # Combine all spheres into one mesh
     combined = trimesh.util.concatenate(spheres)
     combined.show()
