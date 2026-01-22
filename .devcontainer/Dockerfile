@@ -17,6 +17,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     libgl1-mesa-glx \
     libglu1-mesa-dev \
     freeglut3-dev \
+    python3-tk \
     mesa-common-dev &&\
     rm -rf /var/lib/apt/lists/*
 
