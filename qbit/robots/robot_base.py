@@ -2,6 +2,8 @@
 from typing import Tuple
 import numpy as np
 
+from copy import deepcopy
+
 import mujoco
 from mujoco import mjtObj
 import mujoco.viewer
@@ -84,8 +86,8 @@ class RobotBase:
         """
         # first six joint states correspond to robot joints
         return (
-            self._mj_data.qpos[:6],
-            self._mj_data.qvel[:6]
+            deepcopy(self._mj_data.qpos[:6]),
+            deepcopy(self._mj_data.qvel[:6])
         )
 
     

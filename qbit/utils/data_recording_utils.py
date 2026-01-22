@@ -38,7 +38,8 @@ class DataRecording():
         self.eef_fts = []
         self.eef_pos = []
         self.eef_qua = []
-        self.joint_states = []
+        self.joint_positions = []
+        self.joint_velocities = []
 
     def set_subtask_name(self, name):
         self.subtask_name = name.replace("_body","")
@@ -60,11 +61,12 @@ class DataRecording():
         self.eef_fts.append(eef_fts)
         self.eef_pos.append(current_eef_pose_T.translation)
         self.eef_qua.append(current_eef_pose_T.quaternion)
-        self.joint_states.append(current_joint_state)
+        self.joint_positions.append(current_joint_state[0])
+        self.joint_velocities.append(current_joint_state[1])
 
         if self.live_plotting:
             self.line.set_xdata(np.arange(len(np.array(self.eef_fts)[:,0])))
-            self.line.set_ydata(np.array(self.eef_fts)[:,0])
+            self.line.set_ydata(np.array(self.joint_positions)[:,2])
             self.ax.relim()
             self.ax.autoscale_view()
             plt.pause(0.00001)
@@ -83,14 +85,17 @@ class DataRecording():
         self.eef_fts = np.array(self.eef_fts)
         self.eef_pos = np.array(self.eef_pos)
         self.eef_qua = np.array(self.eef_qua)
-        self.joint_states = np.array(self.joint_states)
+        self.joint_positions = np.array(self.joint_positions)
+        self.joint_velocities = np.array(self.joint_velocities)
         
         np.savez(self.savepath + ".npz",
                  timestamp=self.timestamp,
                  eef_fts=self.eef_fts,
                  eef_pos=self.eef_pos,
                  eef_qua=self.eef_qua,
-                 joint_states=self.joint_states)
+                 joint_positions=self.joint_positions,
+                 joint_velocities=self.joint_velocities,
+                 )
     
         self.print_info()
         self.init()
@@ -158,7 +163,7 @@ class DataRecording():
 
     def plot_multiple_primitives(self, filepaths, figsize=(12, 6)):
         """Plot force/torque and position data from multiple primitive .npz files."""
-        fig, axs = plt.subplots(2, 3, figsize=figsize)
+        fig, axs = plt.subplots(3, 6, figsize=figsize)
         colors = plt.cm.tab10(np.linspace(0, 1, len(filepaths)))
         unique_labels = []
         
@@ -168,6 +173,9 @@ class DataRecording():
             time = np.asarray(data["timestamp"])
             force = np.asarray(data["eef_fts"])
             position = np.asarray(data["eef_pos"])
+            # joint_states = np.asarray(data["joint_states"])
+            joint_positions = np.asarray(data["joint_positions"])
+            joint_velocities = np.asarray(data["joint_velocities"])
             
             primitive_name = os.path.basename(filepath).replace(".npz", "").split("_")[-1]
             if primitive_name not in unique_labels:
@@ -181,8 +189,8 @@ class DataRecording():
             if position.ndim == 1:
                 position = position.reshape(-1, 1)
             
+            color_idx = unique_labels.index(primitive_name)                
             for idx in range(3):
-                color_idx = unique_labels.index(primitive_name)                
                 axs[0, idx].plot(time, force[:, idx], color=colors[color_idx], 
                                 linewidth=1, label=label)
                 axs[0, idx].set_title(["Fx", "Fy", "Fz"][idx])
@@ -194,8 +202,16 @@ class DataRecording():
                                 linewidth=1, label=label)
                 axs[1, idx].set_title(["x", "y", "z"][idx])
                 axs[1, idx].set_xlabel("t [s]")
-                axs[1, idx].set_ylabel("Pos [m]")
+                axs[1, idx].set_ylabel("Position [m]")
                 axs[1, idx].grid(True, alpha=0.3)
+            
+            for idx in range(6):
+                axs[2, idx].plot(time, np.squeeze(joint_positions[:, idx]), "-", color=colors[color_idx], 
+                                    linewidth=1, label=label)
+                axs[2, idx].set_title(f"Joint {idx + 1}")
+                axs[2, idx].set_xlabel("t [s]")
+                axs[2, idx].set_ylabel("Position [rad]")
+                axs[2, idx].grid(True, alpha=0.3)
         
         axs[0, 0].legend()
         plt.tight_layout()
@@ -249,7 +265,7 @@ if __name__ == "__main__":
     mDataRecorder = DataRecording(task_env_config_path="qbit/configs/envs/ur5e_labit_benchmark.yaml")
     # mDataRecorder.plot_primitive(filepath="examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_39_03_positioning_pin_d5_20_2_grasping")
 
-    subtask_folder = "examples/experiment_results/trial_0/2026_01_21_22_49_50_screw_m5_16_hexagon_head_2"
+    subtask_folder = "examples/experiment_results/trial_1/2026_01_22_13_42_46_plug_inside_loose_1"
     filepaths = sorted(glob(os.path.join(subtask_folder, "*.npz")))
 
     mDataRecorder.plot_multiple_primitives(filepaths=filepaths)
