@@ -22,3 +22,4 @@ gmsh
 scipy
 coacd
 imageio[ffmpeg]
+pyglet
