@@ -22,4 +22,4 @@ gmsh
 scipy
 coacd
 imageio[ffmpeg]
-pyglet
+pyglet==1.5.31
