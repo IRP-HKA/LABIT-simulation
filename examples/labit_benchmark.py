@@ -64,7 +64,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         self.data_recording = DataRecording(task_env_config_path=task_env_config_path,
                                             robot=self.robot,
                                             sim_timestep=sim_timestep,
-                                            live_plotting=True)
+                                            live_plotting=False)
 
        
         self._mj_renderer = mujoco.Renderer(self._mj_model, height=720, width=1280)
@@ -132,6 +132,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         
         return p_t, q_t.as_quat()
     
+
     def move_pose_lin(self,
                   viewer,
                   body_name: str,
@@ -211,6 +212,7 @@ class PositionBasedInsertion(MujocoEnvBase):
             print("> [ROBOT] reached target pose p: {}, q: {}".format(_eef_pose_T.translation, _eef_pose_T.quaternion))
 
         self.data_recording.save()
+
 
     def show_mj_target_frame(self, body_name, _goal_pose_T, ensure_negative_z_axis=True):
         base_pose = get_relative_pose(self._mj_model, self._mj_data, "world", "base", ensure_negative_z_axis=False)
@@ -412,7 +414,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
         
 
-
     def screw(self, viewer, body_name: str, target_name: str, poses_dict: dict, ensure_negative_z_axis: bool = True, gripper_opening: float = 0.017, gripper_closing: float = 0.0):
         self.data_recording.set_subtask_name(name=body_name)
 
@@ -458,15 +459,14 @@ class PositionBasedInsertion(MujocoEnvBase):
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=body_name, pos_offset=poses_dict["grasp"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["grasp"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=body_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
 
-        self.set_gripper_position(gripper_closing, viewer)
-
         # perform screwing motion - rotate around z-axis
         num_screw_rotations = 2
         rotation_angle_per_step = np.pi  # radians per simulation step
-        current_pose = self.robot.get_eef_pose_in_base_frame()
-
+        
         for rotation_step in range(int(num_screw_rotations * (2 * np.pi) / rotation_angle_per_step)):
             print("[SCREWING] ROTATION {}.".format(rotation_step))
+            current_pose = self.robot.get_eef_pose_in_base_frame()
+
             # Calculate rotation increment around z-axis
             rotation_increment = R.from_euler('z', rotation_angle_per_step).as_matrix()
             
@@ -474,14 +474,22 @@ class PositionBasedInsertion(MujocoEnvBase):
             current_rot = R.from_quat(current_pose.quaternion).as_matrix()
             new_rot = current_rot @ rotation_increment
             new_quat = R.from_matrix(new_rot).as_quat()
-            
+
+            # close gripper to grasp the screw
+            self.set_gripper_position(gripper_closing, viewer)
+
+            # screw motion
             self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=current_pose, quat_offset=new_quat, label="screwing", ensure_negative_z_axis=ensure_negative_z_axis)
-            
-            # Update current pose for next iteration
-            current_pose = self.robot.get_eef_pose_in_base_frame()
+
+            # open gripper
+            self.set_gripper_position(0.01, viewer)
+
+            # rotate back
+            self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=current_pose, quat_offset=current_pose.quaternion, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
+
 
         # release
-        self.set_gripper_position(gripper_opening, viewer)
+        # self.set_gripper_position(gripper_opening, viewer)
 
         # move away
         goal_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
@@ -622,13 +630,13 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_asm": {"position": np.array([0.05, 0.0, -0.15])}})
         # screw 2
-        self.insert(viewer=viewer, body_name="screw_m5_16_hexagon_head_2_body", target_name="housing_top_screw_hole_2_body", gripper_closing=0.006,
+        self.screw(viewer=viewer, body_name="screw_m5_16_hexagon_head_2_body", target_name="housing_top_screw_hole_2_body", gripper_closing=0.006,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.02])},
                         "grasp": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
+                        "after_asm": {"position": np.array([0.0, 0.0, -0.15])}})
         # o-ring
         self.insert(viewer=viewer, body_name="o_ring_grasp_target_body", target_name="housing_top_body", gripper_closing=0.0028,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03]), "orientation": np.array([0.0, 0.0, 0.0])},
@@ -664,10 +672,10 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "after_asm": {"position": np.array([0.0, 0.04, -0.1])}})
 
         # screw 3 for coverplate
-        self.insert(viewer=viewer, body_name="screw_m5_16_hexagon_head_3_body", target_name="housing_top_screw_hole_coverplate_body", gripper_closing=0.006,
+        self.screw(viewer=viewer, body_name="screw_m5_16_hexagon_head_3_body", target_name="housing_top_screw_hole_coverplate_body", gripper_closing=0.006,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.02])},
                         "grasp": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_asm": {"position": np.array([0.0, 0.1, -0.2])}})
@@ -698,25 +706,22 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "asm": {"position": np.array([0.0, 0.003, 0.024])},
                         "after_asm": {"position": np.array([0.0, 0.003, -0.1])}})
         # screw 4
-        self.insert(viewer=viewer, body_name="screw_m5_16_hexagon_head_4_body", target_name="housing_bottom_screw_hole_1_body", gripper_closing=0.006,
+        self.screw(viewer=viewer, body_name="screw_m5_16_hexagon_head_4_body", target_name="housing_bottom_screw_hole_1_body", gripper_closing=0.006,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.02])},
                         "grasp": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
         # screw 5
-        self.insert(viewer=viewer, body_name="screw_m5_16_hexagon_head_5_body", target_name="housing_bottom_screw_hole_2_body", gripper_closing=0.006,
+        self.screw(viewer=viewer, body_name="screw_m5_16_hexagon_head_5_body", target_name="housing_bottom_screw_hole_2_body", gripper_closing=0.006,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.02])},
                         "grasp": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
+                        "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
                         "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
         
-        # self.data_recording.save()
-        # self.data_recording.plot_data()
-
         return
 
 
