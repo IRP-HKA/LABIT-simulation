@@ -69,7 +69,7 @@
           <position kp="10" dampratio="0.1" ctrlrange="-3.1415 3.1415" />
       </default>
 
-      <!-- condim 4 friction 0.5 0.2 0.001 -->
+      <!-- condim 4 friction 0.5 0.2 0.001 mass  0.3 -->
       <default class="collision_gripper">
                 <geom type="mesh" group="3" />
                 <default class="soft">
@@ -81,7 +81,7 @@
                         contype="1"
                         conaffinity="1"
                         friction="1.5 0.005 0.0001" 
-                        mass="0.3"
+                        mass="0.0"
                     />
                 </default>
             </default>
