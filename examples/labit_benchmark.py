@@ -64,7 +64,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         self.data_recording = DataRecording(task_env_config_path=task_env_config_path,
                                             robot=self.robot,
                                             sim_timestep=sim_timestep,
-                                            live_plotting=False)
+                                            live_plotting=True)
 
        
         self._mj_renderer = mujoco.Renderer(self._mj_model, height=720, width=1280)
@@ -106,19 +106,32 @@ class PositionBasedInsertion(MujocoEnvBase):
     
     def minjerk_s(self, t, T):
         tau = np.clip(t/T, 0.0, 1.0)
-        return tau #10*tau**3 - 15*tau**4 + 6*tau**5
+        return 10 * tau**3 - 15 * tau**4 + 6 * tau**5 #tau 
 
 
     def minimal_jerk_pose(self, p0, q0, p1, q1, t, T):
-        # scalar-last order – (x, y, z, w)
         s = self.minjerk_s(t, T)
+    
+        # Linear interpolation for position
         p_t = p0 + s * (p1 - p0)
-        # q_t = geometric_slerp(q0, q1, s)
-        slerp = Slerp(times=[0.0, 1.0], rotations=R.concatenate([R.from_quat(q0), R.from_quat(q1)]))
-        q_t = slerp(s)
+        
+        # SLERP for orientation
+        r0 = R.from_quat(q0)
+        r1 = R.from_quat(q1)
+        
+        # Calculate the relative rotation from r0 to r1
+        relative_rot = r0.inv() * r1
+        
+        # Convert relative rotation to rotation vector
+        # Scale it by the jerk-free parameter 's'
+        relative_rot_vec = relative_rot.as_rotvec()
+        scaled_rot_vec = relative_rot_vec * s
+        
+        # Apply the scaled rotation back to the starting orientation
+        q_t = r0 * R.from_rotvec(scaled_rot_vec)
+        
         return p_t, q_t.as_quat()
-
-
+    
     def move_pose_lin(self,
                   viewer,
                   body_name: str,
