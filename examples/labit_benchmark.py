@@ -206,7 +206,7 @@ class PositionBasedInsertion(MujocoEnvBase):
             if time_until_next_step > 0:
                 time.sleep(time_until_next_step)
 
-        self._mj_data.qvel[0:6] = 0.0
+        # self._mj_data.qvel[0:6] = 0.0
         
         with np.printoptions(precision=4, floatmode="fixed", suppress=True):
             print("> [ROBOT] reached target pose p: {}, q: {}".format(_eef_pose_T.translation, _eef_pose_T.quaternion))
