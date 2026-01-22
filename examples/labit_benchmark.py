@@ -632,7 +632,7 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_asm": {"position": np.array([0.0, 0.1, -0.2])}})
+                        "after_asm": {"position": np.array([0.1, 0.1, -0.2])}})
         # pin for coverplate 2
         self.insert(viewer=viewer, body_name="positioning_pin_d5_20_6_body", target_name="housing_top_pin_hole_coverplate_2_body", gripper_closing=0.0035,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.02])},
@@ -640,7 +640,7 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "after_grasp": {"position": np.array([0.0, 0.0, -0.2])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_asm": {"position": np.array([0.0, 0.1, -0.2])}})
+                        "after_asm": {"position": np.array([0.1, 0.1, -0.2])}})
         # coverplate
         self.insert(viewer=viewer, body_name="cover_plate_body", target_name="housing_top_body", gripper_closing=0.01,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.04, -0.03])},
@@ -766,5 +766,5 @@ if __name__ == "__main__":
         server_modus=True,
         sim_timestep=SIM_TIMESTEP,
         )
-    # mj.exec_labit()
-    mj.exec_labit_headless()
+    mj.exec_labit()
+    # mj.exec_labit_headless()
