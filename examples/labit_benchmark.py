@@ -68,14 +68,21 @@ class PositionBasedInsertion(MujocoEnvBase):
 
        
         self._mj_renderer = mujoco.Renderer(self._mj_model, height=720, width=1280)
-        self.cam = mujoco.MjvCamera()
 
-        # Example: set camera position and orientation
+        self.cam = mujoco.MjvCamera()
         self.cam.azimuth = 0       # horizontal angle
         self.cam.elevation = -60    # vertical angle
         self.cam.distance = 1.0     # distance to model center
         self.cam.lookat = [-0.4, 0, 1] # center point
+
+        self.cam_top_view = mujoco.MjvCamera()
+        self.cam_top_view.azimuth = 0.0      # horizontal angle
+        self.cam_top_view.elevation = -90.0   # vertical angle
+        self.cam_top_view.distance = 1.427  # distance to model center
+        self.cam_top_view.lookat = [-0.268, -0.091, 1.0] # center point
+        
         self.frames = []
+        self.frames_top_view = []
         self.fps = 24
         self.iterations_per_frame = int(1/self._sim_timestep/self.fps)
 
@@ -187,11 +194,11 @@ class PositionBasedInsertion(MujocoEnvBase):
                 self.step_mj_simulation()
 
             self.data_recording.record()
-            self._mj_renderer.update_scene(self._mj_data, camera=self.cam)
 
             if i % self.iterations_per_frame == 0.0:
-                frame = self._mj_renderer.render()
-                self.frames.append(frame)
+                self.render_and_save_camera_frame(camera=self.cam, frames=self.frames)
+                self.render_and_save_camera_frame(camera=self.cam_top_view, frames=self.frames_top_view)
+
 
             if viewer != None:    
                 viewer.sync()
@@ -212,6 +219,12 @@ class PositionBasedInsertion(MujocoEnvBase):
             print("> [ROBOT] reached target pose p: {}, q: {}".format(_eef_pose_T.translation, _eef_pose_T.quaternion))
 
         self.data_recording.save()
+
+
+    def render_and_save_camera_frame(self, camera, frames):
+        self._mj_renderer.update_scene(self._mj_data, camera=camera)
+        frame = self._mj_renderer.render()
+        frames.append(frame)
 
 
     def show_mj_target_frame(self, body_name, _goal_pose_T, ensure_negative_z_axis=True):
@@ -259,11 +272,11 @@ class PositionBasedInsertion(MujocoEnvBase):
             position_error = np.abs(self._mj_data.qpos[6] - (0.025 - position/2))
             
             self.data_recording.record()
-            self._mj_renderer.update_scene(self._mj_data, camera=self.cam)
+            # self._mj_renderer.update_scene(self._mj_data, camera=self.cam)
 
             if i % self.iterations_per_frame == 0.0:
-                frame = self._mj_renderer.render()
-                self.frames.append(frame)
+                self.render_and_save_camera_frame(camera=self.cam, frames=self.frames)
+                self.render_and_save_camera_frame(camera=self.cam_top_view, frames=self.frames_top_view)
             
             if viewer is not None:
                 viewer.sync()
@@ -742,22 +755,19 @@ class PositionBasedInsertion(MujocoEnvBase):
 
             self.labit_policy(viewer=viewer)
             
-            imageio.mimsave("output.mp4", self.frames, fps=self.fps)
+            imageio.mimsave("video_default_view.mp4", self.frames, fps=self.fps)
+            imageio.mimsave("video_top_view.mp4", self.frames_top_view, fps=self.fps)
+
             viewer.close()
 
 
     def signal_handler(self, sig, frame):
         print("\n[EXIT]benchmark execution got interrupted. Saving video until current timestamp.")
         try:
-            imageio.mimsave("output.mp4", self.frames, fps=self.fps)
+            imageio.mimsave("video_default_view.mp4", self.frames, fps=self.fps)
+            imageio.mimsave("video_top_view.mp4", self.frames_top_view, fps=self.fps)
         except Exception as e:
             print(f"Error saving video: {e}")
-        
-        # print("\n[EXIT]saving recorded data.")
-        # try:
-        #     self.data_recording.save()
-        # except Exception as e:
-        #     print(f"Error saving/plotting data: {e}")
 
         os._exit(0) 
 
@@ -767,10 +777,8 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         self.labit_policy()
 
-        imageio.mimsave("output.mp4", self.frames, fps=self.fps)
-        
-        # self.data_recording.save()
-        # self.data_recording.plot_data()
+        imageio.mimsave("video_default_view.mp4", self.frames, fps=self.fps)
+        imageio.mimsave("video_top_view.mp4", self.frames_top_view, fps=self.fps)
         
         sys.exit(0)
 
