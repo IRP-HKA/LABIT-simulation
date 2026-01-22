@@ -74,7 +74,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         self.cam.azimuth = 0       # horizontal angle
         self.cam.elevation = -60    # vertical angle
         self.cam.distance = 1.0     # distance to model center
-        self.cam.lookat = [-0.2, 0, 1] # center point
+        self.cam.lookat = [-0.4, 0, 1] # center point
         self.frames = []
         self.fps = 24
         self.iterations_per_frame = int(1/self._sim_timestep/self.fps)
@@ -720,7 +720,7 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "after_grasp": {"position": np.array([0.0, 0.0, -0.25])},
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.05])},
                         "asm": {"position": np.array([0.0, 0.0, -0.004])},
-                        "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
+                        "after_asm": {"position": np.array([0.0, 0.2, -0.05])}})
         
         return
 
