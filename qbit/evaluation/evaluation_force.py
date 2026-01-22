@@ -46,7 +46,8 @@ class BenchmarkEvaluation:
     def _process_subtask(self, subtask_folder):
         """Process a single subtask folder containing .npz files."""
         subtask_name = os.path.basename(subtask_folder)
-        
+        subtask_name = subtask_name[20:] # removing timestamp from name
+
         # Find all .npz files in the subtask folder
         npz_files = sorted(glob.glob(os.path.join(subtask_folder, "*.npz")))
         
@@ -62,10 +63,6 @@ class BenchmarkEvaluation:
             forces = data["eef_fts"]
             times = data["timestamp"]
             print(f"Processing: {npz_file}")
-            
-            if time_data:
-                # Adjust time to be continuous across multiple files
-                times = times + time_data[-1][-1]
             
             force_data.append(forces)
             time_data.append(times)
