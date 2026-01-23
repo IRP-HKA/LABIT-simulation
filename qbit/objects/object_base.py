@@ -507,7 +507,7 @@ if __name__ == "__main__":
     # mesh_gmsh_path = mesh_stl_path[:-3] + "msh"
 
     # Load the sphered object file
-    sphered_file = "qbit/assets/task_env/labit_benchmark/housing_top_sphered.npy"
+    sphered_file = "qbit/assets/task_env/labit_benchmark/cover_plate_sphered.npy"
     decomposed_mesh = np.load(sphered_file, allow_pickle=True)
     positions = decomposed_mesh.item()["positions"]
     radii = decomposed_mesh.item()["radii"]
@@ -519,7 +519,7 @@ if __name__ == "__main__":
     spheres = []
     i = 0
     for pos, rad in zip(positions, radii):
-        if i % 2 == 0:
+        if i % 1 == 0:
             sphere = trimesh.creation.icosphere(subdivisions=1, radius=rad)
             sphere.apply_translation(pos)
             spheres.append(sphere)
@@ -534,13 +534,13 @@ if __name__ == "__main__":
                   [[-0.03175, -0.03175, -0.001], [0.03175, 0.03175, 0.007]] # o_ring placement
                   ]
     
-    for bbox in bboxes:
-        bbox_min = bbox[0]
-        bbox_max = bbox[1]
-        box = trimesh.creation.box(extents=np.array(bbox_max)-np.array(bbox_min))
-        box.apply_translation((np.array(bbox_min)+np.array(bbox_max))/2)
-        box.visual.face_colors = [255, 0, 0, 100]  # Red color with some transparency
-        spheres.append(box)
+    # for bbox in bboxes:
+    #     bbox_min = bbox[0]
+    #     bbox_max = bbox[1]
+    #     box = trimesh.creation.box(extents=np.array(bbox_max)-np.array(bbox_min))
+    #     box.apply_translation((np.array(bbox_min)+np.array(bbox_max))/2)
+    #     box.visual.face_colors = [255, 0, 0, 100]  # Red color with some transparency
+    #     spheres.append(box)
     # Combine all spheres into one mesh
     combined = trimesh.util.concatenate(spheres)
     combined.show()

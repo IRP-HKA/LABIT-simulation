@@ -266,7 +266,7 @@ if __name__ == "__main__":
     mDataRecorder = DataRecording(task_env_config_path="qbit/configs/envs/ur5e_labit_benchmark.yaml")
     # mDataRecorder.plot_primitive(filepath="examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_39_03_positioning_pin_d5_20_2_grasping")
 
-    subtask_folder = "examples/experiment_results/trial_1/2026_01_22_15_28_43_screw_m5_16_hexagon_head_1"
+    subtask_folder = "examples/experiment_results/trial_1/2026_01_22_20_31_07_bolt_rotor"
     filepaths = sorted(glob(os.path.join(subtask_folder, "*.npz")))
 
     mDataRecorder.plot_multiple_primitives(filepaths=filepaths)
