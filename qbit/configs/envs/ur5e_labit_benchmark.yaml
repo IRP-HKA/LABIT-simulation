@@ -20,7 +20,7 @@ env_objects:
     mass: 250
 
 data_recording:
-  save_folder: "trial_1"
+  save_folder: "trial_2"
 
 task_objects:
   - obj_name: plate_benchmark
@@ -808,7 +808,7 @@ task_objects:
     attach_body: 'plate_benchmark_body'
     attach_pose:
       position: [0.5948, 0.340, -0.015]
-      quaternion: [0.5292533, -0.4689253, -0.5292533, 0.4689253] # wxyz
+      quaternion: [0.5, -0.5, -0.5, 0.5] # wxyz
     joint: free
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
@@ -953,8 +953,8 @@ task_objects:
     mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
     attach_body: 'plate_benchmark_body'
     attach_pose:
-      position: [-0.20325, -0.455684, 0.169335]
-      quaternion: [0.5, -0.5, -0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
+      position: [0.455277, 0.170339, -0.19375]
+      quaternion: [-0.5, -0.5, -0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
     scale: [0.001, 0.001, 0.001]
     mesh_color: [0.8, 0.8, 0.8, 1.0]
   - obj_name: housing_bottom_screw_hole_1
