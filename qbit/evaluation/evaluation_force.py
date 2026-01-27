@@ -16,7 +16,7 @@ class BenchmarkEvaluation:
         
         # Filter parameters
         self.order = 6
-        self.fs = 1000.0  # sample rate, Hz
+        self.fs = 1/0.0005 #1000.0  # sample rate, Hz
         self.cutoff = 5.0  # desired cutoff frequency, Hz
     
     def process_trial_folders(self):
@@ -183,4 +183,4 @@ if __name__ == "__main__":
     evaluator.process_trial_folders()
     
     # Plot metrics (optionally exclude certain subtasks)
-    evaluator.plot_metrics(exclude_subtasks=["Initial", "Screw_M5x16_1__", "Screw_M5x16_2__"])
+    evaluator.plot_metrics()

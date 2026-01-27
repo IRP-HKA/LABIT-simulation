@@ -513,7 +513,10 @@ if __name__ == "__main__":
     # mesh_gmsh_path = mesh_stl_path[:-3] + "msh"
 
     # Load the sphered object file
-    sphered_file = "qbit/assets/task_env/labit_benchmark/cover_plate_sphered.npy"
+    sphered_file = "qbit/assets/task_env/labit_benchmark/fixation_on_plate_1_sphered.npy"
+    mesh_file = "qbit/assets/task_env/labit_benchmark/fixation_on_plate_1.stl"
+    mesh = trimesh.load_mesh(mesh_file)
+    mesh.vertices *= np.array([0.001, 0.001, 0.001])
     decomposed_mesh = np.load(sphered_file, allow_pickle=True)
     positions = decomposed_mesh.item()["positions"]
     radii = decomposed_mesh.item()["radii"]
@@ -548,5 +551,5 @@ if __name__ == "__main__":
     #     box.visual.face_colors = [255, 0, 0, 100]  # Red color with some transparency
     #     spheres.append(box)
     # Combine all spheres into one mesh
-    combined = trimesh.util.concatenate(spheres)
+    combined = trimesh.util.concatenate(spheres,mesh)
     combined.show()
