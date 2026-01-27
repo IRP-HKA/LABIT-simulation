@@ -79,7 +79,7 @@ class BaseObject:
         parent_body_name = config.get('attach_body')
 
         if config.get('mesh_type') == "none":
-            self.obj_body = self._mj_spec.find_body(parent_body_name).add_body(
+            self.obj_body = self._mj_spec.body(parent_body_name).add_body(
                 name = f"{config.get('obj_name')}_body",
                 pos = config.get('attach_pose')['position'],
                 quat = config.get('attach_pose')['quaternion'],
@@ -104,8 +104,8 @@ class BaseObject:
             # given the relative pose of parent body and the pose of the parent body in world.
             
             if config.get('joint') == 'free': 
-                pos = self._mj_spec.find_body(parent_body_name).pos
-                quat = self._mj_spec.find_body(parent_body_name).quat
+                pos = self._mj_spec.body(parent_body_name).pos
+                quat = self._mj_spec.body(parent_body_name).quat
                 quat = np.array([quat[1], quat[2], quat[3], quat[0]])
 
                 quat_ = config.get('attach_pose')['quaternion']
@@ -121,10 +121,11 @@ class BaseObject:
                     name = f"{config['obj_name']}_body",
                     pos = posquat_world[:3],
                     quat = posquat_world[3:],
+                    sleep = mujoco.mjtSleepPolicy.mjSLEEP_INIT if config.get('sleep', True) else mujoco.mjtSleepPolicy.mjSLEEP_AUTO
                 )
                 self.obj_body.add_freejoint()
             else:
-                self.obj_body = self._mj_spec.find_body(parent_body_name).add_body(
+                self.obj_body = self._mj_spec.body(parent_body_name).add_body(
                     name = f"{config.get('obj_name')}_body",
                     pos = config.get('attach_pose')['position'] + center_in_parent,
                     quat = config.get('attach_pose')['quaternion'],
@@ -479,23 +480,28 @@ class SpheredObject(BaseObject):
         else:
             raise NotImplementedError("Only .npy sphere decomposition files are supported for now.")
         
-        for point, radius in zip(self.FINAL_POINTS, self.FINAL_RADII):
-            
-            material = self._config.get('material', 'default')
-            color = self._config.get('mesh_color')
-            if self._config.get('show_spheres', False): group = 2
-            else: group = 3
+        material = self._config.get('material', 'default')
+        color = self._config.get('mesh_color')
+        if self._config.get('show_spheres', False): group = 2
+        else: group = 3
 
+        solref = MATERIALS[material].solref
+        friction = MATERIALS[material].friction
+        condim = config.get('contact').get('condim', 3)
+        points = self.FINAL_POINTS - center_in_parent
+
+        # for point, radius in zip(self.FINAL_POINTS, self.FINAL_RADII):
+        for i in range(len(points)):
             geom = self.obj_body.add_geom(
                 type = mujoco.mjtGeom.mjGEOM_SPHERE,
                 group = group, # make invisible in visualizer with group = 3
-                condim = config.get('contact').get('condim', 3),
+                condim = condim,
                 rgba = color,
-                size = [radius]*3,
-                pos = list(point-center_in_parent),
+                size = [self.FINAL_RADII[i]] * 3,
+                pos = points[i], #list(point-center_in_parent),
                 mass = self._obj_mass/len(self.FINAL_POINTS),
-                solref = MATERIALS[material].solref,
-                friction = MATERIALS[material].friction, # sliding friction between the two task objects
+                solref = solref,
+                friction = friction, # sliding friction between the two task objects
             )
 
         print("loaded sphered object {}".format(config.get('obj_name')))

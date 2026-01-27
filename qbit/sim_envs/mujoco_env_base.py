@@ -8,6 +8,8 @@ import time
 import yaml
 from typing import List
 
+import os
+
 import mujoco
 import mujoco.viewer
 
@@ -52,10 +54,16 @@ class MujocoEnvBase:
         self._sim_time = 0
         self._last_render_time = 0
 
-        
-        self.load_env(task_env_config_path)
-        
-        self.compile_model()
+        if os.path.exists("pre_compiled_env.mjb"):
+            self._config = self.parse_qbit_config_yaml(task_env_config_path)
+            self.load_robot(self._config.get('robot'))
+            self._mj_model = mujoco.MjModel.from_binary_path("pre_compiled_env.mjb")
+            self._mj_model.opt.timestep = self._sim_timestep
+            self._mj_data = self._mj_data = mujoco.MjData(self._mj_model)
+            self.robot.update_mj_pointer(self._mj_model, self._mj_data)
+        else:
+            self.load_env(task_env_config_path)
+            self.compile_model()
         
         self.reset_sim()
         
@@ -147,7 +155,7 @@ class MujocoEnvBase:
             arm_base_pos = env_robot_config.get('base_pose')['position'],
             arm_base_qua = env_robot_config.get('base_pose')['quaternion'], 
             )
-        return self.robot.mj_spec
+        return self.robot._mj_spec
 
 
     def load_env_objects(self, env_objects: List[dict]):
@@ -192,7 +200,9 @@ class MujocoEnvBase:
         print("Compiled the model")
         
         self.robot.update_mj_pointer(self._mj_model, self._mj_data)
-        
+
+        mujoco.mj_saveModel(self._mj_model, "pre_compiled_env.mjb")
+
         return self._mj_model
     
     
@@ -257,13 +267,11 @@ class MujocoEnvBase:
             - show the site frame for debugging
             - https://mujoco.readthedocs.io/en/3.2.7/APIreference/APItypes.html#mjvoption
         """
-        viewer.opt.frame = mujoco.mjtFrame.mjFRAME_BODY
-        viewer.opt.label = mujoco.mjtLabel.mjLABEL_SITE
-        # viewer.opt.label = mujoco.mjtLabel.mjLABEL_BODY
-        # https://mujoco.readthedocs.io/en/3.2.7/APIreference/APItypes.html#mjtvisflag
+        viewer.opt.frame = mujoco.mjtFrame.mjFRAME_NONE
+        viewer.opt.label = mujoco.mjtLabel.mjLABEL_NONE
+
         viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = 0
         viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = 0
-
 
     def update_view_scale(self):
         self._mj_model.vis.scale.contactwidth = 0.01

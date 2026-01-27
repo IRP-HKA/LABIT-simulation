@@ -44,7 +44,7 @@ class RobotBase:
         
         self._mj_spec = mujoco.MjSpec()
         
-        self._mj_spec.from_file(self._config.get('mujoco_xml_path'))
+        self._mj_spec = self._mj_spec.from_file(self._config.get('mujoco_xml_path'))
 
         self.reset_base_pose(arm_base_pos, arm_base_qua)
         
@@ -132,8 +132,9 @@ class RobotBase:
         """
         Reset the base pose of the robot
         """
-        self._mj_spec.find_body('base').pos = base_pos
-        self._mj_spec.find_body('base').quat = base_qua
+        self._mj_spec.body('base').pos = base_pos
+        self._mj_spec.body('base').quat = base_qua
+        
         return
     
     @property

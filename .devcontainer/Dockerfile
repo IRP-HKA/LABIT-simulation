@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/devcontainers/base:focal
+# FROM mcr.microsoft.com/devcontainers/base:focal
+FROM mcr.microsoft.com/devcontainers/base:jammy
 
 ##############################################################################
 ##                                 Global Dependecies                       ##
@@ -21,13 +22,35 @@ RUN DEBIAN_FRONTEND=noninteractive \
     mesa-common-dev &&\
     rm -rf /var/lib/apt/lists/*
 
-# Install pip and config python
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 && \
-    DEBIAN_FRONTEND=noninteractive \
-    apt-get update \
-    && apt install -y -qq --no-install-recommends \
-    python3-pip python3-dev
+# # Install pip and config python
+# RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 && \
+#     DEBIAN_FRONTEND=noninteractive \
+#     apt-get update \
+#     && apt install -y -qq --no-install-recommends \
+#     python3-pip python3-dev
 
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt install -y -qq --no-install-recommends \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa -y \
+    && apt-get update && apt install -y -qq --no-install-recommends \
+    python3.11 \
+    python3.11-dev \
+    python3.11-distutils \
+    python3.11-venv \
+    python3-pip \
+    # Build-Tools für C++ Extensions (wichtig für Trac-IK & MuJoCo)
+    build-essential \
+    cmake \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python 3.11 als Standard setzen
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
+    && update-alternatives --set python3 /usr/bin/python3.11 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1
+
+# Pip auf den neuesten Stand bringen (löst das MuJoCo Wheel Problem)
+RUN python3 -m pip install --upgrade pip setuptools wheel
 
 ##############################################################################
 ##                               Libraries                                  ##
@@ -35,20 +58,20 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 &
 WORKDIR /opt/devcon_lib
 
 # ToTg
-RUN git clone https://github.com/djumpstre/py-totg.git \
-    && pip3 install pybind11[global] \
-    && DEBIAN_FRONTEND=noninteractive apt-get update \
-    && apt install -y -qq --no-install-recommends \
-    libeigen3-dev \
-    cmake \
-    && rm -rf /var/lib/apt/lists/*
+# RUN git clone https://github.com/djumpstre/py-totg.git \
+#     && pip3 install pybind11[global] \
+#     && DEBIAN_FRONTEND=noninteractive apt-get update \
+#     && apt install -y -qq --no-install-recommends \
+#     libeigen3-dev \
+#     cmake \
+#     && rm -rf /var/lib/apt/lists/*
 
-RUN cd /opt/devcon_lib/py-totg \
-    && mkdir build \
-    && cd build \
-    && cmake .. \
-    && make \
-    && pip3 install ..
+# RUN cd /opt/devcon_lib/py-totg \
+#     && mkdir build \
+#     && cd build \
+#     && cmake .. \
+#     && make \
+#     && pip3 install ..
 
 # Track IK
 RUN git clone https://github.com/mjd3/tracikpy.git \

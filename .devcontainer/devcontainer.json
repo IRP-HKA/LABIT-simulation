@@ -30,7 +30,15 @@
 				"ms-python.vscode-pylance",
 				"zxh404.vscode-proto3"
 			],
-			"settings": []
+			"settings": {
+				"python.defaultInterpreterPath": "/usr/bin/python3",
+                "python.terminal.activateEnvInSelectedTerminal": true,
+                "python.analysis.extraPaths": [
+                    "/usr/local/lib/python3.11/dist-packages",
+                    "/opt/devcon_lib/tracikpy"
+                ],
+                // Verhindert, dass VS Code eigene (falsche) Extensions installiert
+                "python.languageServer": "Default"}
 		}
 	}
 	// Forward serial device to enable flash & monitor
