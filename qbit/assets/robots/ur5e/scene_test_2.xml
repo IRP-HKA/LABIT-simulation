@@ -1,10 +1,10 @@
 <mujoco model="ur5e scene">
   <compiler angle="radian" eulerseq="XYZ" meshdir="/workspace/qbit/assets/robots/ur5e/assets" autolimits="true"/>
-  <size memory="-1" />
-  <option integrator="implicitfast" cone="elliptic" solver="Newton" timestep="0.0001" tolerance="1e-6" 
+  <size memory="2G" />
+  <option integrator="implicitfast" cone="elliptic" solver="Newton" timestep="0.0005" tolerance="1e-10" 
           gravity="0.0 0.0 -9.81" impratio="10"
-          o_solref="0.2 1.0" o_solimp="0.9 0.95 0.001 0.5 2">
-    <!-- <flag override="enable" /> -->
+          >
+          <flag sleep="enable" />
   </option>
 
   <!-- <statistic center="0.3 0 0.4" extent="0.8"/> -->
@@ -348,7 +348,7 @@
         solimp="0.95 0.99 0.001"
         solref="0.000005 1"
     />
-    <weld name="pcb_weld" body1="pcb_body" body2="housing_middle_pcb_target_body" active="false" />
+    <!-- <weld name="pcb_weld" body1="pcb_body" body2="housing_middle_pcb_target_body" active="false" /> -->
   </equality>
 
   <contact>

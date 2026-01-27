@@ -20,7 +20,7 @@ env_objects:
     mass: 250
 
 data_recording:
-  save_folder: "trial_2"
+  save_folder: "trial_6_sleep"
 
 task_objects:
   - obj_name: plate_benchmark
@@ -237,7 +237,6 @@ task_objects:
       friction: 0.3
   - obj_name: housing_bottom
     mesh_type: sphere # mesh / sphere / coacd
-    show_spheres: False
     bboxes_fine: [[[-0.075, -0.005, -0.009],[-0.065, 0.005, 0.001]],
                   [[0.135, -0.005, -0.009],[0.145, 0.005, 0.001]],
                   [[-0.005, -0.075, -0.009],[0.005, -0.065, 0.001]],
@@ -257,6 +256,7 @@ task_objects:
       condim: 3
       friction: 0.3
   - obj_name: housing_top
+    sleep: False
     mesh_type: sphere # mesh / sphere / coacd
     bboxes_fine: [[[-0.075, -0.005, -0.004], [-0.065, 0.005, 0.016]],
                   [[0.135, -0.005, -0.004], [0.145, 0.005, 0.016]],
@@ -309,6 +309,7 @@ task_objects:
       friction: 0.3
   - obj_name: housing_middle
     mesh_type: sphere # mesh / sphere / coacd
+    sleep: False
     bboxes_fine: [[[-0.005, 0.135, 0.03], [0.005, 0.145, 0.05]],
                   [[0.065, -0.005, 0.03], [0.075, 0.005, 0.05]],
                   [[-0.075, 0.065, -0.033], [-0.065, 0.075, -0.013]],
@@ -337,7 +338,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.9, 0.9, 0.9, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -351,7 +352,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.9, 0.9, 0.9, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -365,7 +366,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.9, 0.9, 0.9, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -379,7 +380,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.9, 0.9, 0.9, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -393,7 +394,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0, 0, 0, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -408,7 +409,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.81, 0.71, 0.62, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -485,6 +486,7 @@ task_objects:
       friction: 0.3
   - obj_name: cover_plate
     mesh_type: sphere # mesh / sphere / coacd
+    radius_spheres: 0.0005
     mesh_path: /workspace/qbit/assets/task_env/labit_benchmark/cover_plate.stl
     attach_body: 'plate_benchmark_body'
     attach_pose:
@@ -503,7 +505,7 @@ task_objects:
     mesh_path: /workspace/qbit/assets/task_env/labit_benchmark/gearwheel_teeth_35_mod_2.stl
     attach_body: 'plate_benchmark_body'
     attach_pose:
-      position: [0.430, 0.235, -0.007]
+      position: [0.430, 0.235, 0.0]
       quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
     joint: free
     scale: [0.001, 0.001, 0.001]
@@ -518,7 +520,7 @@ task_objects:
     mesh_path: /workspace/qbit/assets/task_env/labit_benchmark/gearwheel_teeth_35_mod_2.stl
     attach_body: 'plate_benchmark_body'
     attach_pose:
-      position: [0.530, 0.235, -0.007]
+      position: [0.530, 0.235, 0.0]
       quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
     joint: free
     scale: [0.001, 0.001, 0.001]
@@ -533,7 +535,7 @@ task_objects:
     mesh_path: /workspace/qbit/assets/task_env/labit_benchmark/pcb.stl
     attach_body: 'plate_benchmark_body'
     attach_pose:
-      position: [0.33325, 0.36325, -0.005]
+      position: [0.33325, 0.36325, 0.0]
       quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
     joint: free
     scale: [0.001, 0.001, 0.001]
@@ -552,7 +554,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.81, 0.71, 0.62, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -634,7 +636,6 @@ task_objects:
       friction: 0.3
   - obj_name: positioning_pin_d5_20_1
     mesh_type: sphere # mesh / sphere / coacd
-    show_spheres: True
     radius_spheres: 0.00025
     mesh_path: /workspace/qbit/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
     attach_body: 'plate_benchmark_body'
@@ -736,7 +737,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.94, 0.97, 1.00, 0.4]
     contact:
       condim: 3
       friction: 0.3
@@ -746,13 +747,13 @@ task_objects:
     mesh_path: /workspace/qbit/assets/task_env/labit_benchmark/o_ring.stl
     attach_body: 'plate_benchmark_body'
     attach_pose:
-      position: [0.395, 0.340, -0.0245]
+      position: [0.395, 0.340, -0.0215]
       quaternion: [ 0.7067295, 0.0230966, 0.7067295, -0.0230966] # wxyz
     joint: free
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0, 0, 0, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -768,7 +769,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.81, 0.71, 0.62, 1.0]
     contact:
       condim: 6
   - obj_name: plug_outside_loose
@@ -783,7 +784,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0, 0, 0, 1.0]
     contact:
       condim: 3
       friction: 0.3
@@ -798,7 +799,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.81, 0.71, 0.62, 1.0]
     contact:
       condim: 6
   - obj_name: tube_clamp
@@ -813,7 +814,7 @@ task_objects:
     scale: [0.001, 0.001, 0.001]
     mass: 0.001
     material: plastic
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
+    mesh_color: [0.9, 0.9, 0.9, 1.0]
     contact:
       condim: 3
     # ---------------------------------------------------------
