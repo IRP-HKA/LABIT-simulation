@@ -2,9 +2,11 @@ from glob import glob
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-from qbit.sim_envs.mujoco_env_base import MujocoEnvBase
+
 from datetime import datetime
 
+from qbit.sim_envs.mujoco_env_base import MujocoEnvBase
+from qbit.evaluation.quality_metric_utils import butter_lowpass_filter
 
 class DataRecording():
     def __init__(self, task_env_config_path, robot=None, sim_timestep=0.001, live_plotting=False):
@@ -20,7 +22,7 @@ class DataRecording():
 
         self.config = MujocoEnvBase.parse_qbit_config_yaml(task_env_config_path)
 
-        self.RESULT_DIR = os.path.join("/workspace/examples/experiment_results/", self.config["data_recording"]["save_folder"])
+        self.RESULT_DIR = os.path.join("/workspace/examples/experiment_results/", datetime.now().strftime("%Y_%m_%d_%H_%M_%S_")+self.config["data_recording"]["save_folder"])
 
         if live_plotting:
             plt.ion()
@@ -174,6 +176,14 @@ class DataRecording():
             time = np.asarray(data["timestamp"])
             force = np.asarray(data["eef_fts"])
             position = np.asarray(data["eef_pos"])
+            
+            fs = 1/self.sim_timestep
+            cutoff = 33.0
+            force[:,0] = butter_lowpass_filter(force[:,0], cutoff=cutoff, fs=fs, order=4)
+            force[:,1] = butter_lowpass_filter(force[:,1], cutoff=cutoff, fs=fs, order=4)
+            # force[:,2] -= force[0,2]
+            force[:,2] = butter_lowpass_filter(force[:,2], cutoff=cutoff, fs=fs, order=4)
+
             # joint_states = np.asarray(data["joint_states"])
             joint_positions = np.asarray(data["joint_positions"])
             joint_velocities = np.asarray(data["joint_velocities"])
@@ -213,8 +223,13 @@ class DataRecording():
                 axs[2, idx].set_xlabel("t [s]")
                 axs[2, idx].set_ylabel("Position [rad]")
                 axs[2, idx].grid(True, alpha=0.3)
-        
-        axs[0, 0].legend()
+        axs[0,3].remove()
+        axs[0,4].remove()
+        axs[0,5].remove()
+        axs[1,3].remove()
+        axs[1,4].remove()
+        axs[1,5].remove()
+        axs[0, 2].legend(loc='upper center', bbox_to_anchor=(0.5, 2))
         plt.tight_layout()
         plt.savefig(os.path.join(*filepath.split(os.sep)[:-1], "multiple_primitives_plot.png"))
         plt.close()
@@ -266,7 +281,7 @@ if __name__ == "__main__":
     mDataRecorder = DataRecording(task_env_config_path="qbit/configs/envs/ur5e_labit_benchmark.yaml")
     # mDataRecorder.plot_primitive(filepath="examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_39_03_positioning_pin_d5_20_2_grasping")
 
-    subtask_folder = "examples/experiment_results/trial_1/2026_01_22_20_31_07_bolt_rotor"
+    subtask_folder = "examples/experiment_results/2026_01_26_23_48_24_trial_6_sleep/2026_01_26_23_59_38_housing_middle_grasp_target"
     filepaths = sorted(glob(os.path.join(subtask_folder, "*.npz")))
 
     mDataRecorder.plot_multiple_primitives(filepaths=filepaths)
