@@ -1,6 +1,7 @@
 from glob import glob
 import numpy as np
 import os
+import sys
 import matplotlib.pyplot as plt
 
 from datetime import datetime
@@ -22,7 +23,7 @@ class DataRecording():
 
         self.config = MujocoEnvBase.parse_qbit_config_yaml(task_env_config_path)
 
-        self.RESULT_DIR = os.path.join("/workspace/examples/experiment_results/", datetime.now().strftime("%Y_%m_%d_%H_%M_%S_")+self.config["data_recording"]["save_folder"])
+        self.RESULT_DIR = os.path.join(os.path.dirname(sys.argv[0]), "results", datetime.now().strftime("%Y_%m_%d_%H_%M_%S_")+self.config["data_recording"]["save_folder"])
 
         if live_plotting:
             plt.ion()
