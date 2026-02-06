@@ -24,7 +24,8 @@
                 "python.terminal.activateEnvInSelectedTerminal": true,
                 "python.analysis.extraPaths": [
                     "/usr/local/lib/python3.11/dist-packages",
-                    "/opt/devcon_lib/tracikpy"
+                    "/opt/devcon_lib/tracikpy",
+					"/workspace/src"
                 ],
                 "python.languageServer": "Default"}
 		}
