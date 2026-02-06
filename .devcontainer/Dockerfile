@@ -46,6 +46,7 @@ RUN python3 -m pip install --upgrade pip setuptools wheel
 ##                               Libraries                                  ##
 ##############################################################################
 WORKDIR /opt/devcon_lib
+ENV PYTHONPATH "${PYTHONPATH}:/workspace/src"
 
 # Track IK
 RUN git clone https://github.com/mjd3/tracikpy.git \

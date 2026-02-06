@@ -1,6 +1,5 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.177.0/containers/python-3-postgres
-// Update the VARIANT arg in docker-compose.yml to pick a Python version: 3, 3.8, 3.7, 3.6 
+
 {
 	"name": "labit-benchmark-devcontainer",
 
@@ -24,8 +23,7 @@
                 "python.terminal.activateEnvInSelectedTerminal": true,
                 "python.analysis.extraPaths": [
                     "/usr/local/lib/python3.11/dist-packages",
-                    "/opt/devcon_lib/tracikpy",
-					"/workspace/src"
+                    "/opt/devcon_lib/tracikpy"
                 ],
                 "python.languageServer": "Default"}
 		}
