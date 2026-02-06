@@ -1,4 +1,5 @@
-examples/experiment_results/
+workcells/**/experiment_results
+workcells/**/results
 *.mjb
 MUJOCO_LOG.TXT
 
