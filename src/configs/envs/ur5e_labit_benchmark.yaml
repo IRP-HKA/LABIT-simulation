@@ -11,7 +11,7 @@ robot:
 env_objects:
   - obj_name: table
     mesh_type: mesh # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/lab_tables/tisch_neu_s0.obj
+    mesh_path: /workspace/src/assets/task_env/lab_tables/lab_table_0.obj
     attach_body: 'world'
     attach_pose:
       position: [0, -0.35, 0.15]
