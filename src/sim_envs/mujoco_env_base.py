@@ -19,7 +19,14 @@ from src.interfaces.grpc import qbit_pb2_grpc
 
 from src.robots.ur5e_mj import UR5eMjArm
 from src.robots.kuka_iiwa14_mj import KUKAiiwa14MjArm
-from src.objects.object_base import DecomposedObject, MeshObject, FlexcompObject, SpheredObject, SDFObject, BaseObject
+
+from src.objects.base_object import BaseObject
+from src.objects.decomposed_object import DecomposedObject
+from src.objects.mesh_object import MeshObject
+from src.objects.sphered_object import SpheredObject
+from src.objects.flexcomp_object import FlexcompObject
+from src.objects.sdf_object import SDFObject
+
 from src.objects.env_objects import MjEnvObjects
 from src.utils.mj_viewer_utils import update_view_camera_parameter
 from src.interfaces.grpc.mj_grpc_proxy import QbitMjGrpcProxy
@@ -348,7 +355,7 @@ class MujocoEnvBase:
 
 if __name__ == "__main__":
     
-    task_env_config_path = "qbit/configs/envs/ur5e_peg_task.yaml"
+    task_env_config_path = "src/configs/envs/ur5e_peg_task.yaml"
     
     mj = MujocoEnvBase(
         task_env_config_path=task_env_config_path

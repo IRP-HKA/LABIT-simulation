@@ -17,7 +17,12 @@ import mujoco.viewer
 from src.robots.ur5e_mj import UR5eMjArm
 from src.robots.kuka_iiwa14_mj import KUKAiiwa14MjArm
 
-from src.objects.object_base import DecomposedObject, MeshObject, FlexcompObject, SpheredObject, SDFObject
+from src.objects.base_object import BaseObject
+from src.objects.decomposed_object import DecomposedObject
+from src.objects.mesh_object import MeshObject
+from src.objects.sphered_object import SpheredObject
+from src.objects.flexcomp_object import FlexcompObject
+from src.objects.sdf_object import SDFObject
 
 from src.utils.tf_utils import T
 from src.utils.mj_viewer_utils import update_view_camera_parameter
