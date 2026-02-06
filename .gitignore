@@ -1,4 +1,5 @@
 examples/experiment_results/
+*.mjb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

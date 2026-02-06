@@ -1,11 +1,3 @@
-"""
-Position based insertion in development mode and use for following tests:
- - Collect the training data for insertion-net
- - Randomize the pyhsical parameter in MuJoCo to compare the force distribution with the real robot
- - Compare the mesh decomposition with different mesh scale
- - Test the surface toughness with the sphere-based method
-"""
-# for recording videos headless in mujoco
 import os
 import signal
 os.environ["MUJOCO_GL"] = "egl"
@@ -17,28 +9,22 @@ import time
 import imageio
 from scipy.spatial.transform import Rotation as R
 
-from qbit.utils.tf_utils import T
-from qbit.utils.mj_viewer_utils import update_view_camera_parameter
-from qbit.utils.mujoco_utils import get_relative_pose, convert_quat_to_wxyz
-from qbit.utils.data_recording_utils import DataRecording
-from qbit.sim_envs.mujoco_env_insertion import MujocoEnvBase
+from src.utils.tf_utils import T
+from src.utils.mj_viewer_utils import update_view_camera_parameter
+from src.utils.mujoco_utils import get_relative_pose, convert_quat_to_wxyz
+from src.utils.data_recording_utils import DataRecording
+from src.sim_envs.mujoco_env_insertion import MujocoEnvBase
 
 
-ENV_CONFIG_PATH = "/workspace/qbit/configs/envs/ur5e_labit_benchmark.yaml"
-NUM_RUNS = 1
+ENV_CONFIG_PATH = "/workspace/src/configs/envs/ur5e_labit_benchmark.yaml"
+NUM_RUNS = 5
 
 SIM_TIMESTEP = 0.0005 # Second
 
-NN_CONTROL_DT = 0.01
-ADMITTANCE_CONTROL_T = 0.01
-JOINT_POSITION_CONTROL_T = 0.001  # Second
-
-POS_RANDOM_LIMIT = 0.001 # meter
-ROT_RANDOM_LIMIT = 1.5 # degree
+POS_RANDOM_LIMIT = 0.000 # meter
 
 
 class PositionBasedInsertion(MujocoEnvBase):
-    
     
     def __init__(self,
                  task_env_config_path: str,
@@ -83,7 +69,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         self.fps = 24
         self.iterations_per_frame = int(1/self._sim_timestep/self.fps)
 
-
     def termination(self, 
                     pose_goal,
                     pose_current,
@@ -106,11 +91,9 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         return False
     
-    
     def minjerk_s(self, t, T):
         tau = np.clip(t/T, 0.0, 1.0)
         return 10 * tau**3 - 15 * tau**4 + 6 * tau**5 #tau 
-
 
     def minimal_jerk_pose(self, p0, q0, p1, q1, t, T):
         s = self.minjerk_s(t, T)
@@ -182,7 +165,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         self.data_recording.set_primitive_name(name=label)
 
         quaternion = quat_offset
-        translation = _goal_pose_T.translation + pos_offset
+        translation = _goal_pose_T.translation + pos_offset + np.random.normal(0, POS_RANDOM_LIMIT, size=3)
         _goal_pose_T = T(translation=translation,
                          quaternion=quaternion)
         current_eef_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", "tool0", ensure_negative_z_axis=False)
@@ -245,12 +228,10 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         self.data_recording.save()
 
-
     def render_and_save_camera_frame(self, camera, frames):
         self._mj_renderer.update_scene(self._mj_data, camera=camera)
         frame = self._mj_renderer.render()
         frames.append(frame)
-
 
     def show_mj_target_frame(self, body_name, _goal_pose_T, ensure_negative_z_axis=True):
         base_pose = get_relative_pose(self._mj_model, self._mj_data, "world", "base", ensure_negative_z_axis=False)
@@ -276,7 +257,6 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         self._mj_data.mocap_quat[mocap_id, :] = convert_quat_to_wxyz(quat)  # wxyz
     
-
     def set_gripper_position(self, position: float, viewer):
         """
         Set the gripper position (width between fingers).
@@ -309,7 +289,6 @@ class PositionBasedInsertion(MujocoEnvBase):
             i += 1
         print("> [GRIPPER] done.")
         self.data_recording.save()
-
 
     def get_offset_in_body_frame(self, body_name: str, pos_offset: np.array = np.array([0.0,0.0,0.0]), euler_offset: np.array = np.array([0.0,0.0,0.0]), ensure_negative_z_axis = True):
         """
@@ -402,7 +381,6 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         return pos_offset_base, quat_offset_base
     
-
     def insert(self, viewer, body_name: str, target_name: str, poses_dict: dict, ensure_negative_z_axis: bool = True, gripper_opening: float = 0.017, gripper_closing: float = 0.0):
         self.data_recording.set_subtask_name(name=body_name)
 
@@ -450,7 +428,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         goal_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["after_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["after_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
-        
 
     def clamp(self, viewer, body_name: str, target_name: str, poses_dict: dict, ensure_negative_z_axis: bool = True, gripper_opening: float = 0.017, gripper_closing: float = 0.0):
         self.data_recording.set_subtask_name(name=body_name)
@@ -503,7 +480,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         goal_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", target_name, ensure_negative_z_axis=ensure_negative_z_axis)
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["after_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["after_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
-
 
     def screw(self, viewer, body_name: str, target_name: str, poses_dict: dict, ensure_negative_z_axis: bool = True, gripper_opening: float = 0.017, gripper_closing: float = 0.0):
         self.data_recording.set_subtask_name(name=body_name)
@@ -583,7 +559,6 @@ class PositionBasedInsertion(MujocoEnvBase):
         pos_offset, quat_offset = self.get_offset_in_body_frame(body_name=target_name, pos_offset=poses_dict["after_asm"].get("position", np.array([0.0, 0.0, 0.0])), euler_offset=poses_dict["after_asm"].get("orientation", np.array([0.0, 0.0, 0.0])), ensure_negative_z_axis=ensure_negative_z_axis)
         self.move_pose_lin(viewer=viewer, body_name=target_name, _goal_pose_T=goal_pose_T, pos_offset=pos_offset, quat_offset=quat_offset, label="moving", ensure_negative_z_axis=ensure_negative_z_axis)
 
-
     def labit_policy(self, viewer = None):
         # # in real robot experiment, calibrate following poses:
         # plate_benchmark: pose relative to robot base
@@ -596,6 +571,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         #   (target centric): pre_asm, asm, after_asm
         # #
         start_time = time.time()
+        
         # assembly of housing middle components
         self.insert(viewer=viewer, body_name="pcb_body", target_name="housing_middle_pcb_target_body", gripper_closing=0.006,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.0, -0.03])},
@@ -772,7 +748,6 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "asm": {"position": np.array([0.0, 0.0, -0.03])},
                         "after_asm": {"position": np.array([0.0, 0.0, -0.1])}})
 
-        
         # tube clamp
         self.clamp(viewer=viewer, body_name="tube_clamp_body", target_name="tube_nozzle_body", gripper_closing=0.01, gripper_opening=0.02, ensure_negative_z_axis=False,
             poses_dict={"pre_grasp": {"position": np.array([0.0, 0.04, -0.02])},
@@ -781,6 +756,10 @@ class PositionBasedInsertion(MujocoEnvBase):
                         "pre_asm": {"position": np.array([0.0, 0.0, -0.08])},
                         "asm": {"position": np.array([0.0, 0.0, -0.01])},
                         "after_asm": {"position": np.array([-0.1, 0.4, -0.15])}})
+        
+        self.exclude_pair_runtime(body1_name="housing_top_body", body2_name="housing_middle_body")
+        self._mj_data.eq_active[1] = 1
+
         # rotate assembly and put onto "housing middle" starting point
         self.data_recording.set_subtask_name(name="housing_assembly_grasp_target_body")
         self.move_to_joint_position(viewer=viewer, joint_positions=np.array([-0.224, -2, 1.78, 1.76, 1.53, 2.92]))
@@ -813,19 +792,21 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         return
 
-
     def exec_labit(self):
         """
         Main function to execute the LABIT benchmark task.
         """
         signal.signal(signal.SIGINT, self.signal_handler)
-        # self.apply_gravity_compensation() # wont work; did it in xml
         with mujoco.viewer.launch_passive(self._mj_model, self._mj_data, show_left_ui=False, show_right_ui=False) as viewer:
             self.update_view_opt(viewer)
-            # self.update_view_scale() # doesnt work anymore in mujoco 3.4.0 ?
             
             update_view_camera_parameter(viewer, view_type="labit_benchmark")
             viewer.sync()
+
+            # set every object that is not "no-collision" to have conaffinity bits set to 5 to include bit 1 and 4 (101)
+            for i in range(self._mj_model.ngeom):
+                if self._mj_model.geom_conaffinity[i] != 0:
+                    self._mj_model.geom_conaffinity[i] = 5
 
             print("simulation timestep: {}".format(self._mj_model.opt.timestep))
 
@@ -841,27 +822,47 @@ class PositionBasedInsertion(MujocoEnvBase):
 
             viewer.close()
 
-
     def signal_handler(self, sig, frame):
         print("\n[EXIT]benchmark execution got interrupted. Saving video until current timestamp.")
         try:
-            imageio.mimsave("video_default_view.mp4", self.frames, fps=self.fps)
-            imageio.mimsave("video_top_view.mp4", self.frames_top_view, fps=self.fps)
+            imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_default_view.mp4"), self.frames, fps=self.fps)
+            imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_top_view.mp4"), self.frames_top_view, fps=self.fps)
         except Exception as e:
             print(f"Error saving video: {e}")
 
         os._exit(0) 
 
-
     def exec_labit_headless(self):
         signal.signal(signal.SIGINT, self.signal_handler)
 
+        for i in range(self._mj_model.ngeom):
+            if self._mj_model.geom_conaffinity[i] != 0:
+                self._mj_model.geom_conaffinity[i] = 4
+
+        self.exclude_pair_runtime(body1_name="housing_top_body", body2_name="housing_middle_body")
         self.labit_policy()
 
-        imageio.mimsave("video_default_view.mp4", self.frames, fps=self.fps)
-        imageio.mimsave("video_top_view.mp4", self.frames_top_view, fps=self.fps)
-        
-  
+        imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_default_view.mp4"), self.frames, fps=self.fps)
+        imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_top_view.mp4"), self.frames_top_view, fps=self.fps)
+
+    def exclude_pair_runtime(self, body1_name, body2_name):
+        b1_id = mujoco.mj_name2id(self._mj_model, mujoco.mjtObj.mjOBJ_BODY, body1_name)
+        b2_id = mujoco.mj_name2id(self._mj_model, mujoco.mjtObj.mjOBJ_BODY, body2_name)
+
+        # 1. Isolate the Box (Body 1)
+        # We set it to belong to Layer 2, and look for Layer 1 (others)
+        for i in range(self._mj_model.ngeom):
+            if self._mj_model.geom_bodyid[i] == b1_id:
+                self._mj_model.geom_contype[i] = 2      # I am Layer 2
+                self._mj_model.geom_conaffinity[i] = 1  # I hit Layer 1 (others)
+
+        # 2. Isolate the Lid (Body 2)
+        # We set it to belong to Layer 4, and look for Layer 1 (others)
+        for i in range(self._mj_model.ngeom):
+            if self._mj_model.geom_bodyid[i] == b2_id:
+                self._mj_model.geom_contype[i] = 4      # I am Layer 4
+                self._mj_model.geom_conaffinity[i] = 1  # I hit Layer 1 (others)
+
 
 if __name__ == "__main__":
 
@@ -873,4 +874,4 @@ if __name__ == "__main__":
             )
         mj.exec_labit()
         # mj.exec_labit_headless()
-    os._exit(0) 
+    os._exit(0)

@@ -8,18 +8,7 @@
 	"service": "labit-dev",
 
 	// Workspace
-	"workspaceFolder": "/workspace",  // the folder in the docker container as workspace
-	// "workspaceMount": "source=${localWorkspaceFolder}/postgres-data,target=/var/lib/postgresql/data,type=bind,consistency=cached",
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [5432, 8000],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd /workspace && pip install -e .",
-
-	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	// "remoteUser": "vscode",
-
+	"workspaceFolder": "/workspace", 
 
 	// Set *default* container specific settings.json values on container create.
 	// Add the IDs of extensions you want installed when the container is created.
@@ -37,9 +26,7 @@
                     "/usr/local/lib/python3.11/dist-packages",
                     "/opt/devcon_lib/tracikpy"
                 ],
-                // Verhindert, dass VS Code eigene (falsche) Extensions installiert
                 "python.languageServer": "Default"}
 		}
 	}
-	// Forward serial device to enable flash & monitor
 }

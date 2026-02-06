@@ -16,14 +16,13 @@ services:
       - ..:/workspace:cached
       - /tmp/.X11-unix:/tmp/.X11-unix
       - /dev:/dev # 
-      - /usr/local:/usr/local
       - $HOME/.Xauthority:/root/.Xauthority:rw
 
     network_mode: 'host'
     
     # ATTENTION: Comment following args with nvidia, if you don't have a nvidia GPU.
     environment:
-      DISPLAY: $DISPLAY
+      DISPLAY: :1
       NVIDIA_VISIBLE_DEVICES: all  # HERE 
       NVIDIA_DRIVER_CAPABILITIES: all # HERE
     runtime: nvidia # and HERE
