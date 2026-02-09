@@ -33,3 +33,10 @@ Configuration files for the LABIT benchmark are provided in:
 - `configs/robots/ur5e.yaml` - Robot configuration
 
 Pre-processed benchmark objects are available in `assets/task_env/labit_benchmark/` including part meshes, collision models, and sphere-based decompositions.
+
+### Trouble shooting
+If you dont have a nvidia gpu, comment out the corresponding lines in the docker-compose.yml
+
+If  the mujoco GUI doesnt show up on your display, check your DISPLAY environment variable and try:
+> xhost +local:docker
+
