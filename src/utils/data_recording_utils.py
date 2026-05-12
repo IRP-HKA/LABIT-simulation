@@ -279,10 +279,10 @@ class DataRecording():
 
 
 if __name__ == "__main__":
-    mDataRecorder = DataRecording(task_env_config_path="qbit/configs/envs/ur5e_labit_benchmark.yaml")
+    mDataRecorder = DataRecording(task_env_config_path="src/configs/envs/ur5e_plug_insertion.yaml")
     # mDataRecorder.plot_primitive(filepath="examples/experiment_results/trial_0/2026_01_21_15_03_08_positioning_pin_d5_20_2/2026_01_21_15_39_03_positioning_pin_d5_20_2_grasping")
 
-    subtask_folder = "examples/experiment_results/2026_01_26_23_48_24_trial_6_sleep/2026_01_26_23_59_38_housing_middle_grasp_target"
+    subtask_folder = "workcells/plug_insertion/results/2026_05_12_16_22_32_trial_1_rnd/2026_05_12_16_22_35_dsub25_male"
     filepaths = sorted(glob(os.path.join(subtask_folder, "*.npz")))
 
     mDataRecorder.plot_multiple_primitives(filepaths=filepaths)

@@ -341,7 +341,6 @@
         solimp="0.95 0.99 0.001"
         solref="0.000005 1"
     />
-    <weld name="housing_top_weld" body1="housing_middle_body" body2="housing_top_body" active="false" />
   </equality>
 
   <contact>

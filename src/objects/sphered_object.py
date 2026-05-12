@@ -16,7 +16,8 @@ class SpheredObject(BaseObject):
                  config_dict):
         super(SpheredObject, self).__init__(mj_spec, config_dict)
 
-        self._sphered_object_dir = self._config.get('mesh_path').replace(".stl", "_sphered.npy")
+        mesh_path = self._config.get('mesh_path')
+        self._sphered_object_dir = os.path.splitext(mesh_path)[0] + "_sphered.npy"
 
         if not os.path.exists(self._sphered_object_dir):
             self.sphere_packing_sdf(mesh=trimesh.load(self._config.get('mesh_path')),

@@ -1,6 +1,9 @@
 workcells/**/experiment_results
 workcells/**/results
+src/assets/task_env/plugs
 *.mjb
+*.mp4
+
 MUJOCO_LOG.TXT
 
 # Byte-compiled / optimized / DLL files

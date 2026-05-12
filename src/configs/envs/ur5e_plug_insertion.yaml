@@ -1,0 +1,58 @@
+# src Task Environment Configuration File
+
+robot:
+  name: ur5e
+  robot_config_path: /workspace/src/configs/robots/ur5e_plug_insertion.yaml
+  base_pose:
+    position:  [0.2, 0.2, 0.95] # [0.2, 0.4, 0.8]
+    quaternion: [0, 0, 0, -1] # wxyz # TODO: Use the default base quaternion in xml, check and change this later
+
+
+env_objects:
+  - obj_name: table
+    mesh_type: mesh # mesh / sphere / coacd
+    mesh_path: /workspace/src/assets/task_env/lab_tables/lab_table_0.obj
+    attach_body: 'world'
+    attach_pose:
+      position: [0, -0.35, 0.15]
+      quaternion: [ 0.5, 0.5, 0.5, 0.5 ]
+    scale: [1, 1, 1]
+    mass: 250
+
+data_recording:
+  save_folder: "trial_1_rnd"
+
+task_objects:
+  - obj_name: dsub25_female
+    mesh_type: sphere # mesh / sphere / coacd
+    sleep: False
+    radius_spheres: 0.00025
+    mesh_path: /workspace/src/assets/task_env/plugs/dsub25_female.stl
+    attach_body: 'table'
+    attach_pose:
+      position: [-0.35, -0.25, 0.97] #[-0.5, -0.25, 0.962]
+      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+    scale: [0.001, 0.001, 0.001]
+    material: plastic
+    mesh_color: [0.8, 0.8, 0.8, 1.0]
+    contact:
+      condim: 3
+  - obj_name: dsub25_male
+    mesh_type: shrinking_sphere # mesh / sphere / shrinking_sphere / coacd
+    sleep: False
+    min_radius: 0.0001
+    coverage_ratio: 0.99
+    n_samples: 10000
+    bboxes_fine: [[[-0.005, -0.02, 0.0],[0.005, 0.02, 0.005]],
+                  ]
+    mesh_path: /workspace/src/assets/task_env/plugs/dsub25_male.stl
+    attach_body: 'table'
+    joint: free
+    attach_pose:
+      position: [-0.3, -0.2, 0.98] #[-0.5, -0.25, 0.962]
+      quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
+    scale: [0.001, 0.001, 0.001]
+    material: plastic
+    mesh_color: [0.8, 0.8, 0.8, 1.0]
+    contact:
+      condim: 3

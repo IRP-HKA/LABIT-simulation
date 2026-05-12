@@ -4,6 +4,7 @@ Using the robot xml as base to create the simulation environment.
  - change the lighting and camera settings
 """
 
+import sys
 import time
 import yaml
 from typing import List
@@ -24,6 +25,7 @@ from src.objects.base_object import BaseObject
 from src.objects.decomposed_object import DecomposedObject
 from src.objects.mesh_object import MeshObject
 from src.objects.sphered_object import SpheredObject
+from src.objects.shrinking_sphere_object import ShrinkingSphereObject
 from src.objects.flexcomp_object import FlexcompObject
 from src.objects.sdf_object import SDFObject
 
@@ -61,10 +63,13 @@ class MujocoEnvBase:
         self._sim_time = 0
         self._last_render_time = 0
 
-        if os.path.exists("pre_compiled_env.mjb"):
+        script_name = os.path.splitext(os.path.basename(sys.argv[0]))[0]
+        self._compiled_model_path = os.path.join("workcells", script_name, "pre_compiled_env.mjb")
+
+        if os.path.exists(self._compiled_model_path):
             self._config = self.parse_qbit_config_yaml(task_env_config_path)
             self.load_robot(self._config.get('robot'))
-            self._mj_model = mujoco.MjModel.from_binary_path("pre_compiled_env.mjb")
+            self._mj_model = mujoco.MjModel.from_binary_path(self._compiled_model_path)
             self._mj_model.opt.timestep = self._sim_timestep
             self._mj_data = self._mj_data = mujoco.MjData(self._mj_model)
             self.robot.update_mj_pointer(self._mj_model, self._mj_data)
@@ -188,6 +193,8 @@ class MujocoEnvBase:
                 FlexcompObject(self._mj_spec, task_obj)
             elif task_obj.get('mesh_type') in ['sphere']:
                 SpheredObject(self._mj_spec, task_obj)
+            elif task_obj.get('mesh_type') in ['shrinking_sphere']:
+                ShrinkingSphereObject(self._mj_spec, task_obj)
             elif task_obj.get('mesh_type') in ['sdf']:
                 SDFObject(self._mj_spec, task_obj)
             else:
@@ -208,7 +215,8 @@ class MujocoEnvBase:
         
         self.robot.update_mj_pointer(self._mj_model, self._mj_data)
 
-        mujoco.mj_saveModel(self._mj_model, "pre_compiled_env.mjb")
+        os.makedirs(os.path.dirname(self._compiled_model_path), exist_ok=True)
+        mujoco.mj_saveModel(self._mj_model, self._compiled_model_path)
 
         return self._mj_model
     
