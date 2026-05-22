@@ -23,8 +23,9 @@ services:
     # ATTENTION: Comment following args with nvidia, if you don't have a nvidia GPU.
     environment:
       DISPLAY: :1
-      NVIDIA_VISIBLE_DEVICES: all  # HERE 
+      NVIDIA_VISIBLE_DEVICES: all  # HERE
       NVIDIA_DRIVER_CAPABILITIES: all # HERE
+      PYOPENGL_PLATFORM: egl        # Genesis renderer: use EGL (GPU) not X11
     runtime: nvidia # and HERE
 
     # Overrides default command so things don't shut down after the process ends.

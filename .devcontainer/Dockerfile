@@ -66,3 +66,15 @@ RUN cd /opt/devcon_lib/tracikpy \
 
 COPY .devcontainer/requirements.txt /tmp
 RUN pip3 --no-cache-dir install -r /tmp/requirements.txt
+
+##############################################################################
+##                                 Genesis                                  ##
+##############################################################################
+
+# PyTorch with CUDA 12.1 — must be present before genesis-world is installed.
+# Adjust the index URL to match the CUDA version on your host if needed
+# (cu118 for CUDA 11.8, cu121 for CUDA 12.1, cpu for CPU-only).
+RUN pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+
+# Genesis physics engine
+RUN pip3 install genesis-world
