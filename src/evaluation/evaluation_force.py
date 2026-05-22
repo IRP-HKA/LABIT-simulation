@@ -136,7 +136,7 @@ class BenchmarkEvaluation:
 
 
 if __name__ == "__main__":
-    benchmark_data_path = r"/workspace/examples/experiment_results/"
+    benchmark_data_path = r"workcells/labit_benchmark/results"
     name_mapping = {"pcb": "PCB", 
                     "plug_inside_loose_1": "Plug_inside_loose_1",
                     "plug_inside_loose_2": "Plug_inside_loose_2",

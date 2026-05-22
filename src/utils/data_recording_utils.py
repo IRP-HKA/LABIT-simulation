@@ -3,6 +3,7 @@ import numpy as np
 import os
 import sys
 import matplotlib.pyplot as plt
+import imageio
 
 from datetime import datetime
 
@@ -10,7 +11,9 @@ from src.sim_envs.mujoco_env_base import MujocoEnvBase
 from src.evaluation.quality_metric_utils import butter_lowpass_filter
 
 class DataRecording():
-    def __init__(self, task_env_config_path, robot=None, sim_timestep=0.001, live_plotting=False):
+    def __init__(self, task_env_config_path, robot=None, sim_timestep=0.001, live_plotting=False, cameras=None, fps=24):
+        self._cameras = cameras or {}
+        self._fps = fps
         self.init()
 
         self.robot = robot
@@ -43,6 +46,13 @@ class DataRecording():
         self.eef_qua = []
         self.joint_positions = []
         self.joint_velocities = []
+        self._frames = {name: [] for name in self._cameras}
+
+    def record_frame(self, mj_data):
+        """Capture one frame from each registered camera and append to its buffer."""
+        for name, (renderer, camera) in self._cameras.items():
+            renderer.update_scene(mj_data, camera=camera)
+            self._frames[name].append(renderer.render().copy())
 
     def set_subtask_name(self, name):
         self.subtask_name = name.replace("_body","")
@@ -99,11 +109,24 @@ class DataRecording():
                  joint_positions=self.joint_positions,
                  joint_velocities=self.joint_velocities,
                  )
-    
+
+        for name, frames in self._frames.items():
+            if frames:
+                imageio.mimsave(self.savepath + f"_{name}.mp4", frames, fps=self._fps)
+
         self.print_info()
+        self.cleanup()
         self.init()
 
-    
+    def cleanup(self):
+        del self.timestamp
+        del self.eef_fts
+        del self.eef_pos
+        del self.eef_qua
+        del self.joint_positions
+        del self.joint_velocities
+        del self._frames
+        
     def print_info(self):
         print("recorded data saved to " + self.savepath)
 

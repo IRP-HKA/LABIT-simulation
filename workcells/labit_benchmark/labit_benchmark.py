@@ -6,7 +6,6 @@ import numpy as np
 import mujoco
 import mujoco.viewer
 import time
-import imageio
 from scipy.spatial.transform import Rotation as R
 
 from src.utils.tf_utils import T
@@ -44,30 +43,34 @@ class PositionBasedInsertion(MujocoEnvBase):
             server_modus,
         )
         
-        self.data_recording = DataRecording(task_env_config_path=task_env_config_path,
-                                            robot=self.robot,
-                                            sim_timestep=sim_timestep,
-                                            live_plotting=False)
-
-       
         self._mj_renderer = mujoco.Renderer(self._mj_model, height=720, width=1280)
 
         self.cam = mujoco.MjvCamera()
-        self.cam.azimuth = 0       # horizontal angle
-        self.cam.elevation = -60    # vertical angle
-        self.cam.distance = 1.0     # distance to model center
-        self.cam.lookat = [-0.4, 0, 1] # center point
+        self.cam.azimuth = 0
+        self.cam.elevation = -60
+        self.cam.distance = 1.0
+        self.cam.lookat = [-0.4, 0, 1]
 
         self.cam_top_view = mujoco.MjvCamera()
-        self.cam_top_view.azimuth = 0.0      # horizontal angle
-        self.cam_top_view.elevation = -90.0   # vertical angle
-        self.cam_top_view.distance = 1.427  # distance to model center
-        self.cam_top_view.lookat = [-0.268, -0.091, 1.0] # center point
-        
-        self.frames = []
-        self.frames_top_view = []
-        self.fps = 24
-        self.iterations_per_frame = int(1/self._sim_timestep/self.fps)
+        self.cam_top_view.azimuth = 0.0
+        self.cam_top_view.elevation = -90.0
+        self.cam_top_view.distance = 1.427
+        self.cam_top_view.lookat = [-0.268, -0.091, 1.0]
+
+        fps = 24
+        self.iterations_per_frame = int(1 / self._sim_timestep / fps)
+
+        self.data_recording = DataRecording(
+            task_env_config_path=task_env_config_path,
+            robot=self.robot,
+            sim_timestep=sim_timestep,
+            live_plotting=False,
+            cameras={
+                "default_view": (self._mj_renderer, self.cam),
+                "top_view": (self._mj_renderer, self.cam_top_view),
+            },
+            fps=fps,
+        )
 
     def termination(self, 
                     pose_goal,
@@ -86,7 +89,11 @@ class PositionBasedInsertion(MujocoEnvBase):
         mujoco.mju_mulQuat(error_quat, pose_goal.quaternion, site_quat_conj)
         mujoco.mju_quat2Vel(error_ori, error_quat, 1.0)
                 
-        if (np.linalg.norm(error_pos) < 0.0001 and np.linalg.norm(error_ori) < 0.001) or (all(np.abs(self._mj_data.qvel[0:6]) < 0.00001)):
+        if (np.linalg.norm(error_pos) < 0.0001 and np.linalg.norm(error_ori) < 0.001):
+            print("> [ROBOT] movement terminated. Pose reached within precision threshold.")
+            return True
+        if (all(np.abs(self._mj_data.qvel[0:6]) < 0.000001)):
+            print("> [ROBOT] movement terminated. Joint velocities near zero.")
             return True
 
         return False
@@ -139,8 +146,7 @@ class PositionBasedInsertion(MujocoEnvBase):
             self.data_recording.record()
 
             if i % self.iterations_per_frame == 0.0:
-                self.render_and_save_camera_frame(camera=self.cam, frames=self.frames)
-                self.render_and_save_camera_frame(camera=self.cam_top_view, frames=self.frames_top_view)
+                self.data_recording.record_frame(self._mj_data)
 
             if viewer != None:    
                 viewer.sync()
@@ -179,7 +185,7 @@ class PositionBasedInsertion(MujocoEnvBase):
         dt = self._sim_timestep
         max_eef_vel = 1.0       # m/s
         max_joint_vel = 3.33    # rad/s
-        traj_time = 1.0 #np.linalg.norm(_goal_pose_T.translation - current_eef_pose_T.translation) / max_eef_vel
+        traj_time = 5.0 #np.linalg.norm(_goal_pose_T.translation - current_eef_pose_T.translation) / max_eef_vel
         nsteps_new_qtgoal = int((traj_time//dt)//10)
 
         with np.printoptions(precision=4, floatmode="fixed", suppress=True):
@@ -206,14 +212,16 @@ class PositionBasedInsertion(MujocoEnvBase):
             self.data_recording.record()
 
             if i % self.iterations_per_frame == 0.0:
-                self.render_and_save_camera_frame(camera=self.cam, frames=self.frames)
-                self.render_and_save_camera_frame(camera=self.cam_top_view, frames=self.frames_top_view)
+                self.data_recording.record_frame(self._mj_data)
 
             if viewer != None:    
                 viewer.sync()
 
             _eef_pose_T = get_relative_pose(self._mj_model, self._mj_data, "base", "tool0", ensure_negative_z_axis=False)
-            if self.termination(pose_goal=_goal_pose_T, pose_current=_eef_pose_T) or i >= 4000:
+            if self.termination(pose_goal=_goal_pose_T, pose_current=_eef_pose_T):
+                break
+            if i >= 4000*traj_time:
+                print("> [ROBOT] movement terminated. Timeout.")
                 break
 
             i += 1
@@ -227,11 +235,6 @@ class PositionBasedInsertion(MujocoEnvBase):
             print("> [ROBOT] reached target pose p: {}, q: {}".format(_eef_pose_T.translation, _eef_pose_T.quaternion))
 
         self.data_recording.save()
-
-    def render_and_save_camera_frame(self, camera, frames):
-        self._mj_renderer.update_scene(self._mj_data, camera=camera)
-        frame = self._mj_renderer.render()
-        frames.append(frame)
 
     def show_mj_target_frame(self, body_name, _goal_pose_T, ensure_negative_z_axis=True):
         base_pose = get_relative_pose(self._mj_model, self._mj_data, "world", "base", ensure_negative_z_axis=False)
@@ -277,8 +280,7 @@ class PositionBasedInsertion(MujocoEnvBase):
             self.data_recording.record()
 
             if i % self.iterations_per_frame == 0.0:
-                self.render_and_save_camera_frame(camera=self.cam, frames=self.frames)
-                self.render_and_save_camera_frame(camera=self.cam_top_view, frames=self.frames_top_view)
+                self.data_recording.record_frame(self._mj_data)
             
             if viewer is not None:
                 viewer.sync()
@@ -816,20 +818,15 @@ class PositionBasedInsertion(MujocoEnvBase):
             viewer.sync()
 
             self.labit_policy(viewer=viewer)
-            
-            imageio.mimsave("video_default_view.mp4", self.frames, fps=self.fps)
-            imageio.mimsave("video_top_view.mp4", self.frames_top_view, fps=self.fps)
 
             viewer.close()
 
     def signal_handler(self, sig, frame):
-        print("\n[EXIT]benchmark execution got interrupted. Saving video until current timestamp.")
+        print("\n[EXIT] Benchmark interrupted. Saving current primitive data.")
         try:
-            imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_default_view.mp4"), self.frames, fps=self.fps)
-            imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_top_view.mp4"), self.frames_top_view, fps=self.fps)
+            self.data_recording.save()
         except Exception as e:
-            print(f"Error saving video: {e}")
-
+            print(f"Error saving data: {e}")
         os._exit(0) 
 
     def exec_labit_headless(self):
@@ -837,13 +834,10 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         for i in range(self._mj_model.ngeom):
             if self._mj_model.geom_conaffinity[i] != 0:
-                self._mj_model.geom_conaffinity[i] = 4
+                self._mj_model.geom_conaffinity[i] = 5
 
         self.exclude_pair_runtime(body1_name="housing_top_body", body2_name="housing_middle_body")
         self.labit_policy()
-
-        imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_default_view.mp4"), self.frames, fps=self.fps)
-        imageio.mimsave(os.path.join(self.data_recording.RESULT_DIR, "video_top_view.mp4"), self.frames_top_view, fps=self.fps)
 
     def exclude_pair_runtime(self, body1_name, body2_name):
         b1_id = mujoco.mj_name2id(self._mj_model, mujoco.mjtObj.mjOBJ_BODY, body1_name)
@@ -872,6 +866,6 @@ if __name__ == "__main__":
             server_modus=True,
             sim_timestep=SIM_TIMESTEP,
             )
-        mj.exec_labit()
-        # mj.exec_labit_headless()
+        # mj.exec_labit()
+        mj.exec_labit_headless()
     os._exit(0)
