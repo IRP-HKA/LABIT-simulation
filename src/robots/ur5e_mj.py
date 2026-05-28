@@ -32,9 +32,9 @@ class UR5eMjArm(RobotBase):
         self.load_ik_solver()
 
         # TODO: parse using xml file
-        self.base_link_name = 'base'
+        self.base_link_name = 'base' # base
         self.base_id = 1
-        self.tcp_body_name = 'tool0'
+        self.tcp_body_name = 'tool0' # tool0
         self.tcp_id = 8
 
     def get_q_goal(self, eef_pose):
@@ -105,11 +105,11 @@ class UR5eMjArm(RobotBase):
         
         self._ik = TracIKSolver(
             "/workspace/src/assets/robots/ur5e/ur5e_robot_calibrated.urdf",
-            base_link="base_link",
-            tip_link="tool0",
-            timeout=0.5,
-            epsilon=1e-6,
-            solve_type='Distance'
+            base_link="base",
+            tip_link="flange",
+            timeout=0.05,
+            # epsilon=1e-6,
+            # solve_type='Distance'
         )
         return
 
@@ -179,7 +179,7 @@ class UR5eMjArm(RobotBase):
         Get the FTS data
         If transform_to_base is True, the FTS is transformed to use the base frame coordinate
         """
-        sensor_data_corrected = - copy.deepcopy(self._mj_data.sensordata)
+        sensor_data_corrected = -copy.deepcopy(self._mj_data.sensordata)
         if not transform_to_base:
             return sensor_data_corrected
         else:

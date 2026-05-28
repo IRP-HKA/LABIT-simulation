@@ -146,8 +146,6 @@
       <geom type="sphere" size=".001 .001 .001" contype="0" conaffinity="0" rgba=".6 .3 .3 .5"/>
       <site name="target" type="sphere" size="0.001" rgba="0 0 1 1" group="1"/>
     </body>
-    <body name="table">
-      <geom name="table_geom" type="mesh" mesh="table_surface" pos="0 -0.35 0.15"  quat="0.5 0.5 0.5 0.5" mass="250" />
       <body name="base" quat="0 0 0 -1" childclass="ur5e" gravcomp="1">
         <inertial mass="4.0" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
         <geom mesh="base_0" material="black" class="visual"/>
@@ -328,7 +326,6 @@
             </body>
           </body>
       </body>
-    </body>
   </body>
   </worldbody>
 
@@ -341,7 +338,7 @@
         solimp="0.95 0.99 0.001"
         solref="0.000005 1"
     />
-    <!-- <weld name="housing_top_weld" body1="housing_middle_body" body2="housing_top_body" active="false" /> -->
+    <weld name="housing_top_weld" body1="housing_middle_body" body2="housing_top_body" active="false" />
   </equality>
 
   <contact>

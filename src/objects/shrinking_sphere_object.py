@@ -30,6 +30,7 @@ import os
 import mujoco
 import numpy as np
 import trimesh
+from tqdm import tqdm
 
 from src.objects.base_object import BaseObject
 
@@ -100,8 +101,7 @@ class ShrinkingSphereObject(BaseObject):
         centers: list[np.ndarray] = []
         radii:   list[float]      = []
 
-        print("[ShrinkingSphere] Running shrinking iterations ...")
-        for i, (p, d) in enumerate(zip(points, directions)):
+        for i, (p, d) in enumerate(tqdm(zip(points, directions), total=len(points), desc="Shrinking spheres")):
             if i not in ray_to_hit:
                 continue                            # ray escaped (open mesh / grazing)
 

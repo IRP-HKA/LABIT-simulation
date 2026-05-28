@@ -17,9 +17,40 @@ from src.sim_envs.mujoco_env_insertion import MujocoEnvBase
 
 ENV_CONFIG_PATH = "/workspace/src/configs/envs/ur5e_labit_benchmark.yaml"
 NUM_RUNS = 5
-SIM_TIMESTEP = 0.0005       # Second
+SIM_TIMESTEP = 0.001       # Second
 POS_RANDOM_LIMIT = 0.000    # meter
-_EEF_OFFSET = 0.21
+_EEF_OFFSET = 0.25
+
+TRIAL_DIR = "/workspace/workcells/labit_benchmark/trial_4"
+
+# Gripper closing width (metres) per assembly object, matching labit_policy values
+GRIPPER_CLOSE_MAP = {
+    "PCB":                 0.006,
+    "Plug_inside_loose_1": 0.005,
+    "Plug_inside_loose_2": 0.005,
+    "Plug_outside_loose":  0.009,
+    "Positioning_Pin_1":   0.0035,
+    "Positioning_Pin_2":   0.0035,
+    "Rotor":               0.005,
+    "Housing_Middle":      0.03,
+    "Gearwheel_Teeth_1":   0.043,
+    "Gearwheel_Teeth_2":   0.043,
+    "Positioning_Pin_3":   0.0035,
+    "Positioning_Pin_4":   0.0035,
+    "Housing_Top":         0.005,
+    "Screw_M5x16_1":       0.006,
+    "Screw_M5x16_2":       0.006,
+    "Screw_M5x16_3":       0.006,
+    "Screw_M5x16_4":       0.006,
+    "Screw_M5x16_5":       0.006,
+    "O-Ring":              0.0028,
+    "Positioning_Pin_5":   0.0035,
+    "Positioning_Pin_6":   0.0035,
+    "Coverplatte":         0.014,
+    "Tube":                0.01,
+    "Module":              0.03,
+}
+GRIPPER_OPEN_DEFAULT = 0.017
 
 
 class PositionBasedInsertion(MujocoEnvBase):
@@ -793,6 +824,163 @@ class PositionBasedInsertion(MujocoEnvBase):
 
         return
 
+    # ── recording replay ──────────────────────────────────────────────────────
+
+    def replay_joint_trajectory(self, viewer, q_traj: np.ndarray, timestamps: np.ndarray):
+        """
+        Drive the robot arm through a recorded joint position trajectory.
+
+        q_traj    : (N, 6) array of recorded joint positions (rad)
+        timestamps: (N,)   monotonic timestamps starting at 0 (s)
+        """
+        t_start = float(timestamps[0])
+        t_end   = float(timestamps[-1])
+        n_steps = max(1, int(round((t_end - t_start) / self._sim_timestep)))
+
+        for i in range(n_steps):
+            t = min(t_start + i * self._sim_timestep, t_end)
+            q = np.array([np.interp(t, timestamps, q_traj[:, j]) for j in range(6)])
+            self._mj_data.ctrl[0:6] = q
+            self.step_mj_simulation()
+            self.data_recording.record()
+            if i % self.iterations_per_frame == 0:
+                self.data_recording.record_frame(self._mj_data)
+            if viewer is not None:
+                viewer.sync()
+
+    def replay_pose_trajectory(self, viewer, pose_traj: np.ndarray, timestamps: np.ndarray):
+        """
+        Replay an EEF pose trajectory via IK, mirroring the approach in
+        sim_param_estimation.simulation_task.
+
+        pose_traj  : (N, 7) — [x, y, z, qx, qy, qz, qw] in robot base frame
+        timestamps : (N,)   — relative timestamps starting at 0 (s)
+        """
+        from scipy.spatial.transform import Slerp, Rotation as Rot
+        from src.utils.tf_utils import T as TF
+
+        pos  = pose_traj[:, :3]   # (N, 3)
+        quat = pose_traj[:, 3:]   # (N, 4) xyzw
+        slerp   = Slerp(timestamps, Rot.from_quat(quat))
+
+        t_end   = float(timestamps[-1])
+        n_steps = max(1, int(round(t_end / self._sim_timestep)))
+        q_prev  = self._mj_data.qpos[:6].copy()
+
+        for i in range(n_steps):
+            t   = min(i * self._sim_timestep, t_end)
+            p_t = np.array([np.interp(t, timestamps, pos[:, j]) for j in range(3)])
+            q_t = slerp(t).as_quat()   # xyzw
+
+            q_prev = self.robot._ik.ik(TF(p_t, q_t)._matrix, q_prev)
+            self._mj_data.ctrl[:6] = q_prev
+            self.step_mj_simulation()
+            self.data_recording.record()
+
+            if i % self.iterations_per_frame == 0:
+                self.data_recording.record_frame(self._mj_data)
+            if viewer is not None:
+                viewer.sync()
+
+    def replay_primitive(self, viewer, h5_path: str):
+        """
+        Execute one primitive from an h5 recording file.
+
+        Filename convention: YYYY_MM_DD_HH_MM_SS_asm_{OBJECT}_{PRIMITIVE}.h5
+        Primitives:
+          move / force / move_force → IK-based EEF pose replay
+          grasp                     → close gripper to object-specific width
+          release                   → open gripper to default opening
+        """
+        import h5py
+
+        fname  = os.path.basename(h5_path)
+        parts  = fname.replace('.h5', '').split('_')
+        if parts[-1] == 'force' and parts[-2] == 'move':
+            primitive = 'move_force'
+            obj_name  = '_'.join(parts[7:-2])
+        else:
+            primitive = parts[-1]
+            obj_name  = '_'.join(parts[7:-1])
+
+        self.data_recording.set_subtask_name(name=obj_name)
+        self.data_recording.set_primitive_name(name=primitive)
+
+        with h5py.File(h5_path, 'r') as f:
+            pose_traj = np.array(f['pose/data'])            # (N, 7) [x,y,z,qx,qy,qz,qw]
+            ts        = np.array(f['pose/timestamps'])
+            q_last    = np.array(f['joint_states/data'])[-1, 0, :]   # for grasp/release hold
+
+        ts = ts - ts[0]   # normalise to start at 0
+        pose_traj[:, 2] += _EEF_OFFSET
+
+        if primitive in ('move', 'force', 'move_force'):
+            self.replay_pose_trajectory(viewer, pose_traj, ts)
+            self.data_recording.save()
+
+        elif primitive == 'grasp':
+            # self._mj_data.ctrl[0:6] = q_last
+            gripper_close = GRIPPER_CLOSE_MAP.get(obj_name, 0.005)
+            self.set_gripper_position(gripper_close, viewer)
+
+        elif primitive == 'release':
+            # self._mj_data.ctrl[0:6] = q_last
+            self.set_gripper_position(GRIPPER_OPEN_DEFAULT, viewer)
+
+    def replay_from_recordings(self, viewer=None):
+        """
+        Load all h5 files from TRIAL_DIR sorted by their filename timestamp
+        and replay them sequentially in simulation.
+
+        The filename prefix YYYY_MM_DD_HH_MM_SS gives the global execution
+        order across all assembly objects without any manual ordering required.
+        """
+        import h5py, glob
+
+        all_files = sorted(
+            glob.glob(os.path.join(TRIAL_DIR, '**', '*.h5'), recursive=True),
+            key=lambda p: os.path.basename(p)[:19],   # sort on YYYY_MM_DD_HH_MM_SS
+        )
+        print(f"[Replay] Found {len(all_files)} recordings in {TRIAL_DIR}.")
+
+        # Teleport robot directly to the first recording's start position.
+        # Using qpos assignment rather than the PD controller avoids the robot
+        # swinging through the scene from qpos=0, which would cause collisions
+        # and look wrong in the viewer.
+        with h5py.File(all_files[0], 'r') as f:
+            q_init = np.array(f['joint_states/data'])[0, 0, :]
+        print(f"[Replay] Setting initial configuration: {np.round(q_init, 3)}")
+        self._mj_data.qpos[:6] = q_init
+        self._mj_data.qvel[:6] = 0.0
+        self._mj_data.ctrl[:6] = q_init
+        mujoco.mj_forward(self._mj_model, self._mj_data)
+        if viewer is not None:
+            viewer.sync()
+
+        for i, h5_path in enumerate(all_files):
+            rel = os.path.relpath(h5_path, TRIAL_DIR)
+            print(f"[Replay] {i+1:3d}/{len(all_files)}: {rel}")
+            self.replay_primitive(viewer, h5_path)
+
+    def exec_labit_replay(self):
+        """Replay the LABIT benchmark from real robot recordings in TRIAL_DIR."""
+        signal.signal(signal.SIGINT, self.signal_handler)
+
+        with mujoco.viewer.launch_passive(
+            self._mj_model, self._mj_data,
+            show_left_ui=False, show_right_ui=False,
+        ) as viewer:
+            self.update_view_opt(viewer)
+            update_view_camera_parameter(viewer, view_type="labit_benchmark")
+            viewer.sync()
+
+            for i in range(self._mj_model.ngeom):
+                if self._mj_model.geom_conaffinity[i] != 0:
+                    self._mj_model.geom_conaffinity[i] = 5
+
+            self.replay_from_recordings(viewer=viewer)
+            viewer.close()
+
     def exec_labit(self):
         """
         Main function to execute the LABIT benchmark task.
@@ -865,6 +1053,6 @@ if __name__ == "__main__":
             server_modus=True,
             sim_timestep=SIM_TIMESTEP,
             )
-        mj.exec_labit()
+        mj.exec_labit_replay()
         # mj.exec_labit_headless()
     os._exit(0)

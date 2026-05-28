@@ -208,7 +208,8 @@ class MujocoEnvBase:
         """
         self._mj_model = self._mj_spec.compile()
         self._mj_model.opt.timestep = self._sim_timestep
-
+        self.update_view_scale()
+        
         self._mj_data = mujoco.MjData(self._mj_model)
         
         print("Compiled the model")
@@ -285,7 +286,7 @@ class MujocoEnvBase:
         viewer.opt.frame = mujoco.mjtFrame.mjFRAME_NONE
         viewer.opt.label = mujoco.mjtLabel.mjLABEL_NONE
 
-        viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = 0
+        viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTPOINT] = 1
         viewer.opt.flags[mujoco.mjtVisFlag.mjVIS_CONTACTFORCE] = 0
 
     def update_view_scale(self):

@@ -1,0 +1,23 @@
+robot:
+  name: ur5e
+  robot_config_path: /workspace/src/configs/robots/ur5e.yaml
+  base_pose:
+    position:  [0.0, 0.0, 0.0]
+    quaternion: [1, 0, 0, 0]   # wxyz — identity, robot upright
+
+task_objects:
+  - obj_name: cube
+    mesh_type: mesh
+    mesh_path: /workspace/src/assets/task_env/labit_benchmark/cover_plate.stl
+    attach_body: 'world'
+    attach_pose:
+      position: [0.60, 0.0, 0.03]
+      quaternion: [1.0, 0.0, 0.0, 0.0]
+    joint: free
+    scale: [0.001, 0.001, 0.001]
+    mass: 0.05
+    material: plastic
+    mesh_color: [0.2, 0.6, 1.0, 1.0]
+    contact:
+      condim: 3
+      friction: 0.5

@@ -1,0 +1,56 @@
+robot:
+  name: ur5e
+  robot_config_path: /workspace/src/configs/robots/ur5e_param_estimation.yaml
+  base_pose:
+    position:  [0.2, 0.2, 0.95]
+    quaternion: [-0.7071068, 0, 0, 0.7071068]   # wxyz — 180° z-rotation
+
+env_objects:
+  - obj_name: table
+    mesh_type: mesh # mesh / sphere / coacd
+    mesh_path: /workspace/src/assets/task_env/lab_tables/lab_table_0.obj
+    attach_body: 'world'
+    attach_pose:
+      position: [0, -0.35, 0.15]
+      quaternion: [ 0.5, 0.5, 0.5, 0.5 ]
+    scale: [1, 1, 1]
+    mass: 250
+
+data_recording:
+  save_folder: "trial_1_rnd"
+
+task_objects:
+  - obj_name: male_peg
+    mesh_type: mesh # mesh / sphere / coacd
+    sleep: False
+    show_spheres: True
+    n_samples: 10000
+    min_radius: 0.0005
+    radius_spheres: 0.0004
+    mesh_path: /workspace/workcells/sim_param_estimation/data/unprocessed/peg_in_hole/ur5e_peg.stl
+    attach_body: 'tool0'
+    attach_pose:
+      position: [0.0, 0.0, 0.1] 
+      quaternion: [0.7071068, 0.7071068, 0, 0] # wxyz
+    scale: [0.001, 0.001, 0.001]
+    material: plastic
+    mesh_color: [0.8, 0.8, 0.8, 1.0]
+    contact:
+      condim: 6
+  - obj_name: female_socket
+    mesh_type: coacd # mesh / sphere / shrinking_sphere / coacd
+    sleep: False
+    show_spheres: True
+    n_samples: 10000
+    min_radius: 0.001
+    bboxes_fine: [[[-0.013, 0.0, -0.013],[0.013, 0.1,  0.013]]]
+    mesh_path: /workspace/workcells/sim_param_estimation/data/unprocessed/peg_in_hole/ur5e_hole.stl
+    attach_body: 'base'
+    attach_pose:
+      position: [0.10352354, -0.49432462, 0.0]
+      quaternion: [0.5, 0.5, 0.5, 0.5] # wxyz
+    scale: [0.001, 0.001, 0.001]
+    material: plastic
+    mesh_color: [0.8, 0.8, 0.8, 1.0]
+    contact:
+      condim: 6

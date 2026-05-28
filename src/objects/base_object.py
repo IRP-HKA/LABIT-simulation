@@ -26,7 +26,10 @@ class BaseObject:
                                          "plug_inside_loose_1", 
                                          "plug_inside_loose_2",
                                          "plug_inside_fixed_1",
-                                         "plug_inside_fixed_2"]
+                                         "plug_inside_fixed_2",
+                                         "female_socket",
+                                         "male_peg",
+                                         ]
 
         if self._config.get('mesh_path'):
             self.start_position_hole, self.insertion_depth = self.get_hole_pose_depth(self._config)

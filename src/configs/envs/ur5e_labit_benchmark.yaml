@@ -5,7 +5,7 @@ robot:
   robot_config_path: /workspace/src/configs/robots/ur5e.yaml
   base_pose:
     position:  [0.2, 0.2, 0.95] # [0.2, 0.4, 0.8]
-    quaternion: [0, 0, 0, -1] # wxyz # TODO: Use the default base quaternion in xml, check and change this later
+    quaternion: [0.7071068, 0, 0, 0.7071068] #[0, 0, 0, -1] # wxyz # TODO: Use the default base quaternion in xml, check and change this later
 
 
 env_objects:
@@ -37,949 +37,949 @@ task_objects:
     contact:
       condim: 3
       friction: 0.3
-  - obj_name: parts_supply
-    mesh_type: sphere # mesh / sphere / coacd / vhacd
-    bboxes_fine: [[[0.0475, 0.00475, 0.015], [0.0625, 0.0195, 0.03]], #tube
-                  [[0.08, 0.003, 0.015], [0.09, 0.013, 0.03]],        # pin
-                  [[0.105, 0.003, 0.015], [0.115, 0.013, 0.03]],      # pin
-                  [[0.13, 0.003, 0.015], [0.14, 0.013, 0.03]],        # screw
-                  [[0.155, 0.003, 0.015], [0.165, 0.013, 0.03]],      # screw
-                  [[0.18, 0.003, 0.015], [0.19, 0.013, 0.03]],        # screw
-                  [[0.007, 0.05, 0.015],[0.017, 0.06, 0.03]],         # pin
-                  [[0.007, 0.02, 0.015],[0.017, 0.03, 0.03]],         # pin
-                  [[0.08, 0.038, 0.015], [0.09, 0.048, 0.03]],        # pin
-                  [[0.105, 0.038, 0.015], [0.115, 0.048, 0.03]],      # pin
-                  [[0.13, 0.038, 0.015], [0.14, 0.048, 0.03]],        # screw
-                  [[0.155, 0.038, 0.015], [0.165, 0.048, 0.03]],      # screw
-                  [[0.04325, 0.06291, 0.0125], [0.05325, 0.07291, 0.0275]], # plug inside
-                  [[0.0825, 0.0575, 0.015], [0.0975, 0.0725, 0.03]], # plug outside
-                  [[0.12985, 0.06291, 0.0125], [0.13985, 0.07291, 0.0275]], # plug inside
-                  ]
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/parts_supply.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.385, 0.380, 0.0]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [1.0, 1.0, 1.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_2_1
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.085, 0.025, 0.0]
-      quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_2_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.2555, 0.075, 0.0]
-      quaternion: [0.0, -0.7071068, 0.7071068, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_2_3
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.035, 0.1255, 0.0]
-      quaternion: [0.0,  0.7071068, 0.7071068, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_2_4
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.2055, 0.1755, 0.0]
-      quaternion: [0.0,  1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_0_1
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.395, 0.025, 0.0]
-      quaternion: [0.0,  0.0, 1.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_0_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.5655, 0.075, 0.0]
-      quaternion: [0.0, -0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_0_3
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.345, 0.1255, 0.0]
-      quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_0_4
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.5155, 0.1755, 0.0]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_1_1
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_1.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.085, 0.225, 0.0]
-      quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_1_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_1.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.2555, 0.275, 0.0]
-      quaternion: [0.0, -0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_1_3
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_1.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.2055, 0.3755, 0.0]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: fixation_on_plate_3_1
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_3.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.057, 0.308, 0.0]
-      quaternion: [0.0,  0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: housing_bottom
-    sleep: False
-    mesh_type: sphere # mesh / sphere / coacd
-    bboxes_fine: [[[-0.075, -0.005, -0.009],[-0.065, 0.005, 0.001]],
-                  [[0.135, -0.005, -0.009],[0.145, 0.005, 0.001]],
-                  [[-0.005, -0.075, -0.009],[0.005, -0.065, 0.001]],
-                  [[0.065, 0.065, -0.009],[0.075, 0.075, 0.001]],
-                  ]
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/housing_bottom.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.180275, 0.300206, -0.1245]
-      quaternion: [-0.0013479, 0, 0, 0.9999991] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: housing_top
-    sleep: False
-    mesh_type: sphere # mesh / sphere / coacd
-    bboxes_fine: [[[-0.075, -0.005, -0.004], [-0.065, 0.005, 0.016]],
-                  [[0.135, -0.005, -0.004], [0.145, 0.005, 0.016]],
-                  [[-0.045, -0.005, -0.0045], [-0.035, 0.005, 0.0155]],
-                  [[0.035, -0.005, -0.0045], [0.045, 0.005, 0.0155]],
-                  [[-0.005, 0.065, -0.0185], [0.005, 0.075, 0.0015]],
-                  [[0.065, -0.075, -0.0185], [0.075, -0.065, 0.0015]],
-                  [[-0.03175, -0.03175, -0.001], [0.03175, 0.03175, 0.007]] # o_ring placement
-                  ]
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/housing_top.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.110277, 0.100277, -0.0285] # [0.110277, 0.100277, -0.020]
-      quaternion: [0.0, 0.9999999, -0.0003849, 0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: tube_nozzle
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/tube_nozzle.stl
-    attach_body: 'housing_top_body'
-    attach_pose:
-      position: [0.100, 0.0, 0.006]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: nut_tube
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/nut_tube.stl
-    attach_body: 'housing_top_body'
-    attach_pose:
-      position: [0.0920001, -0.0000327147, -0.0052]
-      quaternion: [0.9999979, 0, 0, 0.0020447] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: housing_middle
-    mesh_type: sphere # mesh / sphere / coacd
-    sleep: False
-    bboxes_fine: [[[-0.005, 0.135, 0.03], [0.005, 0.145, 0.05]],
-                  [[0.065, -0.005, 0.03], [0.075, 0.005, 0.05]],
-                  [[-0.075, 0.065, -0.033], [-0.065, 0.075, -0.013]],
-                  [[0.135, 0.065, -0.033], [0.145, 0.075, -0.013]],
-                  ]
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/housing_middle.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.420277, 0.0302231, -0.160]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-    contact:
-      condim: 3
-  - obj_name: pin_pcb_1
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0004
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.04175, 0.03675, -0.003]
-      quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.9, 0.9, 0.9, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: pin_pcb_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.08825, 0.03675, -0.003]
-      quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.9, 0.9, 0.9, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: pin_pcb_3
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.04175, 0.06325, -0.003]
-      quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.9, 0.9, 0.9, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: pin_pcb_4
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.08825, 0.06325, -0.003]
-      quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.9, 0.9, 0.9, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: plug_outside_fixed
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_outside_fixed.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.115, 0.10495, -0.018]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0, 0, 0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: plug_inside_fixed_1
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0001
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_fixed.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.0327, 0.0975, -0.0107]
-      quaternion: [0.0,  -0.7071068, 0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.81, 0.71, 0.62, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: screw_m5_12_1
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_12.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.07, 0.07, -0.002]
-      quaternion: [0.7069585, -0.0144802, -0.7069585, -0.0144802] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: bolt_middle_housing
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/bolt_middle_housing.stl
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.07, 0.07, 0.0]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: rotor_printed_part
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/rotor_printed_part.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.30, 0.200, 0.0] #[0.320, 0.200, 0.0]
-      quaternion: [0, 0.9238795, -0.3826834, 0] #[0.0, 1.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [1.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: bolt_rotor
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/bolt_rotor.stl
-    attach_body: 'rotor_printed_part_body'
-    attach_pose:
-      position: [0.0, 0.0, 0.015]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: screw_m5_12_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_12.stl
-    attach_body: 'rotor_printed_part_body'
-    attach_pose:
-      position: [0.0, 0.0, 0.006]
-      quaternion: [0.0007469, 0.7071064, -0.0007469, 0.7071064] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: cover_plate
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0005
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/cover_plate.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.330, 0.270, 0.0]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [1.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: gearwheel_teeth_35_mod_2_1
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/gearwheel_teeth_35_mod_2.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.430, 0.235, 0.0]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [1.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: gearwheel_teeth_35_mod_2_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/gearwheel_teeth_35_mod_2.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.530, 0.235, 0.0]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [1.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: pcb
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/pcb.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.33325, 0.36325, 0.0]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    material: plastic
-    mesh_color: [1.0, 0.0, 0.0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: plug_inside_fixed_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_fixed.stl
-    attach_body: 'pcb_body'
-    attach_pose:
-      position: [0.0001, -0.0003, 0.0082]
-      quaternion: [0.7071068, 0, 0, -0.7071068] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.81, 0.71, 0.62, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: screw_m5_16_hexagon_head_1
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.00015
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.570, 0.372, -0.031]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: screw_m5_16_hexagon_head_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.545, 0.372, -0.031]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: screw_m5_16_hexagon_head_3
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.520, 0.372, -0.031]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: screw_m5_16_hexagon_head_4
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.545, 0.337, -0.031]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: screw_m5_16_hexagon_head_5
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.520, 0.337, -0.031]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: positioning_pin_d5_20_1
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.00025
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.495, 0.372, -0.035]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.5
-  - obj_name: positioning_pin_d5_20_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.470, 0.372, -0.035]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: positioning_pin_d5_20_3
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.495, 0.337, -0.035]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: positioning_pin_d5_20_4
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.470, 0.337, -0.035]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: positioning_pin_d5_20_5
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.397, 0.355, -0.035]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: positioning_pin_d5_20_6
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.397, 0.325, -0.035]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: steel
-    mesh_color: [0.5, 0.5, 0.5, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: tube
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0004
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/tube.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.440, 0.368, -0.055]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.94, 0.97, 1.00, 0.4]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: o_ring
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0005
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/o_ring.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.395, 0.340, -0.0215]
-      quaternion: [ 0.7067295, 0.0230966, 0.7067295, -0.0230966] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0, 0, 0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: plug_inside_loose_1
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0001
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_loose.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.4335, 0.3116, -0.0225]
-      quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.81, 0.71, 0.62, 1.0]
-    contact:
-      condim: 6
-  - obj_name: plug_outside_loose
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0002
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_outside_loose.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.475, 0.315, -0.0266]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0, 0, 0, 1.0]
-    contact:
-      condim: 3
-      friction: 0.3
-  - obj_name: plug_inside_loose_2
-    mesh_type: sphere # mesh / sphere / coacd
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_loose.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.5198, 0.3116, -0.0225] # [0.519, ...]
-      quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.81, 0.71, 0.62, 1.0]
-    contact:
-      condim: 6
-  - obj_name: tube_clamp
-    mesh_type: sphere # mesh / sphere / coacd
-    radius_spheres: 0.0002
-    mesh_path: /workspace/src/assets/task_env/labit_benchmark/tube_clamp.stl
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.5948, 0.340, -0.015]
-      quaternion: [0.5, -0.5, -0.5, 0.5] # wxyz
-    joint: free
-    scale: [0.001, 0.001, 0.001]
-    mass: 0.001
-    material: plastic
-    mesh_color: [0.9, 0.9, 0.9, 1.0]
-    contact:
-      condim: 3
-    # ---------------------------------------------------------
+  # - obj_name: parts_supply
+  #   mesh_type: sphere # mesh / sphere / coacd / vhacd
+  #   bboxes_fine: [[[0.0475, 0.00475, 0.015], [0.0625, 0.0195, 0.03]], #tube
+  #                 [[0.08, 0.003, 0.015], [0.09, 0.013, 0.03]],        # pin
+  #                 [[0.105, 0.003, 0.015], [0.115, 0.013, 0.03]],      # pin
+  #                 [[0.13, 0.003, 0.015], [0.14, 0.013, 0.03]],        # screw
+  #                 [[0.155, 0.003, 0.015], [0.165, 0.013, 0.03]],      # screw
+  #                 [[0.18, 0.003, 0.015], [0.19, 0.013, 0.03]],        # screw
+  #                 [[0.007, 0.05, 0.015],[0.017, 0.06, 0.03]],         # pin
+  #                 [[0.007, 0.02, 0.015],[0.017, 0.03, 0.03]],         # pin
+  #                 [[0.08, 0.038, 0.015], [0.09, 0.048, 0.03]],        # pin
+  #                 [[0.105, 0.038, 0.015], [0.115, 0.048, 0.03]],      # pin
+  #                 [[0.13, 0.038, 0.015], [0.14, 0.048, 0.03]],        # screw
+  #                 [[0.155, 0.038, 0.015], [0.165, 0.048, 0.03]],      # screw
+  #                 [[0.04325, 0.06291, 0.0125], [0.05325, 0.07291, 0.0275]], # plug inside
+  #                 [[0.0825, 0.0575, 0.015], [0.0975, 0.0725, 0.03]], # plug outside
+  #                 [[0.12985, 0.06291, 0.0125], [0.13985, 0.07291, 0.0275]], # plug inside
+  #                 ]
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/parts_supply.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.385, 0.380, 0.0]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [1.0, 1.0, 1.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_2_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.085, 0.025, 0.0]
+  #     quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_2_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.2555, 0.075, 0.0]
+  #     quaternion: [0.0, -0.7071068, 0.7071068, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_2_3
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.035, 0.1255, 0.0]
+  #     quaternion: [0.0,  0.7071068, 0.7071068, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_2_4
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_2.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.2055, 0.1755, 0.0]
+  #     quaternion: [0.0,  1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_0_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.395, 0.025, 0.0]
+  #     quaternion: [0.0,  0.0, 1.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_0_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.5655, 0.075, 0.0]
+  #     quaternion: [0.0, -0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_0_3
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.345, 0.1255, 0.0]
+  #     quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_0_4
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_0.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.5155, 0.1755, 0.0]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_1_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_1.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.085, 0.225, 0.0]
+  #     quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_1_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_1.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.2555, 0.275, 0.0]
+  #     quaternion: [0.0, -0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_1_3
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_1.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.2055, 0.3755, 0.0]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: fixation_on_plate_3_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/fixation_on_plate_3.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.057, 0.308, 0.0]
+  #     quaternion: [0.0,  0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: housing_bottom
+  #   sleep: False
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   bboxes_fine: [[[-0.075, -0.005, -0.009],[-0.065, 0.005, 0.001]],
+  #                 [[0.135, -0.005, -0.009],[0.145, 0.005, 0.001]],
+  #                 [[-0.005, -0.075, -0.009],[0.005, -0.065, 0.001]],
+  #                 [[0.065, 0.065, -0.009],[0.075, 0.075, 0.001]],
+  #                 ]
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/housing_bottom.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.180275, 0.300206, -0.1245]
+  #     quaternion: [-0.0013479, 0, 0, 0.9999991] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: housing_top
+  #   sleep: False
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   bboxes_fine: [[[-0.075, -0.005, -0.004], [-0.065, 0.005, 0.016]],
+  #                 [[0.135, -0.005, -0.004], [0.145, 0.005, 0.016]],
+  #                 [[-0.045, -0.005, -0.0045], [-0.035, 0.005, 0.0155]],
+  #                 [[0.035, -0.005, -0.0045], [0.045, 0.005, 0.0155]],
+  #                 [[-0.005, 0.065, -0.0185], [0.005, 0.075, 0.0015]],
+  #                 [[0.065, -0.075, -0.0185], [0.075, -0.065, 0.0015]],
+  #                 [[-0.03175, -0.03175, -0.001], [0.03175, 0.03175, 0.007]] # o_ring placement
+  #                 ]
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/housing_top.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.110277, 0.100277, -0.0285] # [0.110277, 0.100277, -0.020]
+  #     quaternion: [0.0, 0.9999999, -0.0003849, 0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: tube_nozzle
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/tube_nozzle.stl
+  #   attach_body: 'housing_top_body'
+  #   attach_pose:
+  #     position: [0.100, 0.0, 0.006]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: nut_tube
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/nut_tube.stl
+  #   attach_body: 'housing_top_body'
+  #   attach_pose:
+  #     position: [0.0920001, -0.0000327147, -0.0052]
+  #     quaternion: [0.9999979, 0, 0, 0.0020447] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: housing_middle
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   sleep: False
+  #   bboxes_fine: [[[-0.005, 0.135, 0.03], [0.005, 0.145, 0.05]],
+  #                 [[0.065, -0.005, 0.03], [0.075, 0.005, 0.05]],
+  #                 [[-0.075, 0.065, -0.033], [-0.065, 0.075, -0.013]],
+  #                 [[0.135, 0.065, -0.033], [0.145, 0.075, -0.013]],
+  #                 ]
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/housing_middle.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.420277, 0.0302231, -0.160]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  #   contact:
+  #     condim: 3
+  # - obj_name: pin_pcb_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0004
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.04175, 0.03675, -0.003]
+  #     quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.9, 0.9, 0.9, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: pin_pcb_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.08825, 0.03675, -0.003]
+  #     quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.9, 0.9, 0.9, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: pin_pcb_3
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.04175, 0.06325, -0.003]
+  #     quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.9, 0.9, 0.9, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: pin_pcb_4
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/pin_pcb.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.08825, 0.06325, -0.003]
+  #     quaternion: [0.0, 0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.9, 0.9, 0.9, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: plug_outside_fixed
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_outside_fixed.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.115, 0.10495, -0.018]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0, 0, 0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: plug_inside_fixed_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0001
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_fixed.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.0327, 0.0975, -0.0107]
+  #     quaternion: [0.0,  -0.7071068, 0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.81, 0.71, 0.62, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: screw_m5_12_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_12.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.07, 0.07, -0.002]
+  #     quaternion: [0.7069585, -0.0144802, -0.7069585, -0.0144802] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: bolt_middle_housing
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/bolt_middle_housing.stl
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.07, 0.07, 0.0]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: rotor_printed_part
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/rotor_printed_part.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.30, 0.200, 0.0] #[0.320, 0.200, 0.0]
+  #     quaternion: [0, 0.9238795, -0.3826834, 0] #[0.0, 1.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [1.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: bolt_rotor
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/bolt_rotor.stl
+  #   attach_body: 'rotor_printed_part_body'
+  #   attach_pose:
+  #     position: [0.0, 0.0, 0.015]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: screw_m5_12_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_12.stl
+  #   attach_body: 'rotor_printed_part_body'
+  #   attach_pose:
+  #     position: [0.0, 0.0, 0.006]
+  #     quaternion: [0.0007469, 0.7071064, -0.0007469, 0.7071064] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: cover_plate
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0005
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/cover_plate.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.330, 0.270, 0.0]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [1.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: gearwheel_teeth_35_mod_2_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/gearwheel_teeth_35_mod_2.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.430, 0.235, 0.0]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [1.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: gearwheel_teeth_35_mod_2_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/gearwheel_teeth_35_mod_2.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.530, 0.235, 0.0]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [1.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: pcb
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/pcb.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.33325, 0.36325, 0.0]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   material: plastic
+  #   mesh_color: [1.0, 0.0, 0.0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: plug_inside_fixed_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_fixed.stl
+  #   attach_body: 'pcb_body'
+  #   attach_pose:
+  #     position: [0.0001, -0.0003, 0.0082]
+  #     quaternion: [0.7071068, 0, 0, -0.7071068] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.81, 0.71, 0.62, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: screw_m5_16_hexagon_head_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.00015
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.570, 0.372, -0.031]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: screw_m5_16_hexagon_head_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.545, 0.372, -0.031]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: screw_m5_16_hexagon_head_3
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.520, 0.372, -0.031]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: screw_m5_16_hexagon_head_4
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.545, 0.337, -0.031]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: screw_m5_16_hexagon_head_5
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/screw_m5_16_hexagon_head_thread.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.520, 0.337, -0.031]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: positioning_pin_d5_20_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.00025
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.495, 0.372, -0.035]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.5
+  # - obj_name: positioning_pin_d5_20_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.470, 0.372, -0.035]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: positioning_pin_d5_20_3
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.495, 0.337, -0.035]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: positioning_pin_d5_20_4
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.470, 0.337, -0.035]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: positioning_pin_d5_20_5
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.397, 0.355, -0.035]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: positioning_pin_d5_20_6
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/positioning_pin_d5_20.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.397, 0.325, -0.035]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: steel
+  #   mesh_color: [0.5, 0.5, 0.5, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: tube
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0004
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/tube.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.440, 0.368, -0.055]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.94, 0.97, 1.00, 0.4]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: o_ring
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0005
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/o_ring.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.395, 0.340, -0.0215]
+  #     quaternion: [ 0.7067295, 0.0230966, 0.7067295, -0.0230966] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0, 0, 0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: plug_inside_loose_1
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0001
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_loose.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.4335, 0.3116, -0.0225]
+  #     quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.81, 0.71, 0.62, 1.0]
+  #   contact:
+  #     condim: 6
+  # - obj_name: plug_outside_loose
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0002
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_outside_loose.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.475, 0.315, -0.0266]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0, 0, 0, 1.0]
+  #   contact:
+  #     condim: 3
+  #     friction: 0.3
+  # - obj_name: plug_inside_loose_2
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/plug_inside_loose.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.5198, 0.3116, -0.0225] # [0.519, ...]
+  #     quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.81, 0.71, 0.62, 1.0]
+  #   contact:
+  #     condim: 6
+  # - obj_name: tube_clamp
+  #   mesh_type: sphere # mesh / sphere / coacd
+  #   radius_spheres: 0.0002
+  #   mesh_path: /workspace/src/assets/task_env/labit_benchmark/tube_clamp.stl
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.5948, 0.340, -0.015]
+  #     quaternion: [0.5, -0.5, -0.5, 0.5] # wxyz
+  #   joint: free
+  #   scale: [0.001, 0.001, 0.001]
+  #   mass: 0.001
+  #   material: plastic
+  #   mesh_color: [0.9, 0.9, 0.9, 1.0]
+  #   contact:
+  #     condim: 3
+  #   # ---------------------------------------------------------
     
-    # TARGET POSITIONS FOR ASSEMBLY (PIN HOLES; SCREW HOLES etc.)
+  #   # TARGET POSITIONS FOR ASSEMBLY (PIN HOLES; SCREW HOLES etc.)
     
-    # ---------------------------------------------------------
-  - obj_name: housing_middle_pin_hole_1
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [-0.07, 0.07, -0.023]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_middle_pin_hole_2
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.140, 0.07, -0.023]
-      quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_bottom_pin_hole_1
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_bottom_body'
-    attach_pose:
-      position: [-0.07, 0.0, -0.01]
-      quaternion: [0.0, 0.0, 0.0, 1.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_bottom_pin_hole_2
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_bottom_body'
-    attach_pose:
-      position: [0.140, 0.0, -0.009]
-      quaternion: [0.0, 0.0, 0.0, 1.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_middle_pcb_target
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.0650022, 0.0500038, -0.0093]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_middle_grasp_target
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.03581, 0.140, -0.00222]
-      quaternion: [-0.5, -0.5, -0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_middle_release_target
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_bottom_body'
-    attach_pose:
-      position: [0.03581, -0.070, -0.03178]
-      quaternion: [-0.5, 0.5, 0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]  
-  - obj_name: housing_middle_pin_hole_3
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.0, 0.140, 0.04]
-      quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_middle_pin_hole_4
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [0.07, 0.0, 0.04]
-      quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_top_release_target
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_middle_body'
-    attach_pose:
-      position: [-0.03, 0.07, 0.0545]
-      quaternion: [0.0, 0.0, 0.0, 1.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_top_screw_hole_1
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_top_body'
-    attach_pose:
-      position: [-0.07, 0.0, 0.006]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_top_screw_hole_2
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_top_body'
-    attach_pose:
-      position: [0.140, 0.0, 0.006]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_top_pin_hole_coverplate_1
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_top_body'
-    attach_pose:
-      position: [-0.04, 0.0, 0.0055]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_top_pin_hole_coverplate_2
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_top_body'
-    attach_pose:
-      position: [0.04, 0.0, 0.0055]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_top_screw_hole_coverplate
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_top_body'
-    attach_pose:
-      position: [0.0, -0.04, 0.0044]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_assembly_grasp_target
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_bottom_body'
-    attach_pose:
-      position: [0.035, -0.070, -0.00525]
-      quaternion: [-0.5, 0.5, 0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_assembly_release_target
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'plate_benchmark_body'
-    attach_pose:
-      position: [0.455277, 0.170339, -0.19375]
-      quaternion: [-0.5, -0.5, -0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_bottom_screw_hole_1
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_bottom_body'
-    attach_pose:
-      position: [0.0, -0.07, 0.0045]
-      quaternion: [0.0, 1.0, 0.0, 0.0] #wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: housing_bottom_screw_hole_2
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'housing_bottom_body'
-    attach_pose:
-      position: [0.07, 0.07, 0.0045]
-      quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
-  - obj_name: o_ring_grasp_target
-    mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
-    attach_body: 'o_ring_body'
-    attach_pose:
-      position: [0.0, 0.0, -0.0286]
-      quaternion: [0.7071068, 0, -0.7071068, 0] # wxyz
-    scale: [0.001, 0.001, 0.001]
-    mesh_color: [0.8, 0.8, 0.8, 1.0]
+  #   # ---------------------------------------------------------
+  # - obj_name: housing_middle_pin_hole_1
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [-0.07, 0.07, -0.023]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_middle_pin_hole_2
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.140, 0.07, -0.023]
+  #     quaternion: [1.0, 0.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_bottom_pin_hole_1
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_bottom_body'
+  #   attach_pose:
+  #     position: [-0.07, 0.0, -0.01]
+  #     quaternion: [0.0, 0.0, 0.0, 1.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_bottom_pin_hole_2
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_bottom_body'
+  #   attach_pose:
+  #     position: [0.140, 0.0, -0.009]
+  #     quaternion: [0.0, 0.0, 0.0, 1.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_middle_pcb_target
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.0650022, 0.0500038, -0.0093]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_middle_grasp_target
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.03581, 0.140, -0.00222]
+  #     quaternion: [-0.5, -0.5, -0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_middle_release_target
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_bottom_body'
+  #   attach_pose:
+  #     position: [0.03581, -0.070, -0.03178]
+  #     quaternion: [-0.5, 0.5, 0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]  
+  # - obj_name: housing_middle_pin_hole_3
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.0, 0.140, 0.04]
+  #     quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_middle_pin_hole_4
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [0.07, 0.0, 0.04]
+  #     quaternion: [0.0, 0.0, 1.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_top_release_target
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_middle_body'
+  #   attach_pose:
+  #     position: [-0.03, 0.07, 0.0545]
+  #     quaternion: [0.0, 0.0, 0.0, 1.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_top_screw_hole_1
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_top_body'
+  #   attach_pose:
+  #     position: [-0.07, 0.0, 0.006]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_top_screw_hole_2
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_top_body'
+  #   attach_pose:
+  #     position: [0.140, 0.0, 0.006]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_top_pin_hole_coverplate_1
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_top_body'
+  #   attach_pose:
+  #     position: [-0.04, 0.0, 0.0055]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_top_pin_hole_coverplate_2
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_top_body'
+  #   attach_pose:
+  #     position: [0.04, 0.0, 0.0055]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_top_screw_hole_coverplate
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_top_body'
+  #   attach_pose:
+  #     position: [0.0, -0.04, 0.0044]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_assembly_grasp_target
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_bottom_body'
+  #   attach_pose:
+  #     position: [0.035, -0.070, -0.00525]
+  #     quaternion: [-0.5, 0.5, 0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_assembly_release_target
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'plate_benchmark_body'
+  #   attach_pose:
+  #     position: [0.455277, 0.170339, -0.19375]
+  #     quaternion: [-0.5, -0.5, -0.5, 0.5] #[ 0.5 , 0.5, -0.5, 0.5] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_bottom_screw_hole_1
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_bottom_body'
+  #   attach_pose:
+  #     position: [0.0, -0.07, 0.0045]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] #wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: housing_bottom_screw_hole_2
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'housing_bottom_body'
+  #   attach_pose:
+  #     position: [0.07, 0.07, 0.0045]
+  #     quaternion: [0.0, 1.0, 0.0, 0.0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]
+  # - obj_name: o_ring_grasp_target
+  #   mesh_type: none # mesh / sphere / coacd,vhacd / flexcomp / sdf / none (for only coordinate system)
+  #   attach_body: 'o_ring_body'
+  #   attach_pose:
+  #     position: [0.0, 0.0, -0.0286]
+  #     quaternion: [0.7071068, 0, -0.7071068, 0] # wxyz
+  #   scale: [0.001, 0.001, 0.001]
+  #   mesh_color: [0.8, 0.8, 0.8, 1.0]

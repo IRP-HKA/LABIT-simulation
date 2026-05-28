@@ -45,7 +45,7 @@ class EEFPositionController:
                 "/workspace/src/assets/robots/ur5e/ur5e_robot.urdf",
                 # "/workspace/qbit/assets/robots/ur5e/ur5e_robot_calibrated.urdf",
                 base_link="base_link",
-                tip_link="flange",
+                tip_link="tool0",
                 timeout=0.05
             )
 

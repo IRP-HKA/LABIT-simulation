@@ -136,17 +136,22 @@ def plot_metrics_boxplot(
 
 if __name__ == "__main__":
     # Example usage of the plotting functions
-    data = np.load("workcells/plug_insertion/results/2026_05_12_16_22_32_trial_1_rnd/2026_05_12_16_22_35_dsub25_male/2026_05_12_16_23_59_dsub25_male_inserting.npz")
+    data = np.load("workcells/sim_param_estimation/results/2026_05_27_13_40_54_trial_1_rnd/2026_05_27_13_41_01_male_peg/2026_05_27_13_41_01_male_peg_inserting.npz")
 
     order = 6
-    fs = 1/0.0005 #1000.0  # sample rate, Hz
+    fs = 1/0.001 #1000.0  # sample rate, Hz
     cutoff = 5.0  # desired cutoff frequency, Hz
 
     force_data = data["eef_fts"]
+
+    Fx = force_data[:,0] - np.mean(force_data[0:100,0])
+    Fy = force_data[:,1] - np.mean(force_data[0:100,1])
     Fz = -1 * (force_data[:,2] - np.mean(force_data[0:100,2]))
+
     Fx = butter_lowpass_filter(force_data[:, 0], cutoff, fs, order)
     Fy = butter_lowpass_filter(force_data[:, 1], cutoff, fs, order)
     Fz = butter_lowpass_filter(Fz, cutoff, fs, order)
+
     
     plot_force_data(data["timestamp"], np.stack([Fx, Fy, Fz], axis=1), title="Trial")
 
