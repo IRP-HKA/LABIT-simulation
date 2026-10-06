@@ -1,4 +1,16 @@
 # LABIT: Long-Horizon Robotic Assembly Benchmark for Industrial Tasks
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <h3></h3>
+      <video src="docs/video_sim_default_view.mp4" width="100%" controls></video>
+    </td>
+    <td width="50%" align="center">
+      <h3></h3>
+      <video src="docs/video_sim_top_view.mp4" width="100%" controls></video>
+    </td>
+  </tr>
+</table>
 
 The LABIT benchmark provides a comprehensive evaluation framework for robotic assembly and insertion operations. This simulation framework implements the full LABIT benchmark within MuJoCo, enabling scalable evaluation of robotic insertion task performance.
 
