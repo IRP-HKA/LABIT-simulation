@@ -3,11 +3,11 @@
   <tr>
     <td width="50%" align="center">
       <h3></h3>
-      <video src="docs/video_sim_default_view.mp4" width="100%" controls></video>
+      <img src="docs/video_sim_default_view.gif" width="100%" alt="LABIT simulation, default view">
     </td>
     <td width="50%" align="center">
       <h3></h3>
-      <video src="docs/video_sim_top_view.mp4" width="100%" controls></video>
+      <img src="docs/video_sim_top_view.gif" width="100%" alt="LABIT simulation, top view">
     </td>
   </tr>
 </table>
