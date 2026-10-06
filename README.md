@@ -1,4 +1,7 @@
 # LABIT: Long-Horizon Robotic Assembly Benchmark for Industrial Tasks
+
+[![Project Website](https://img.shields.io/badge/Project-Website-blue?style=for-the-badge&logo=googlechrome&logoColor=white)](https://irp-hka.github.io/robotic-assembly-benchmark/)
+
 <table width="100%">
   <tr>
     <td width="50%" align="center">
